@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="id" x-data="templateManager()">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Surat - Sistem Kearsipan Surat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="assets/js/app.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        .sidebar-transition { transition: transform 0.3s ease-in-out; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hover-scale { transition: transform 0.2s; }
+        .hover-scale:hover { transform: scale(1.02); }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 border-b border-gray-700 shadow-xl">
+        <div class="px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white transition-all duration-300 lg:hidden">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <div class="flex-shrink-0 flex items-center ml-4 lg:ml-0">
+                        <i class="fas fa-school text-teal-600 text-2xl mr-3"></i>
+                        <div>
+                            <h1 class="text-xl font-bold text-white">Sistem Kearsipan Surat</h1>
+                            <p class="text-xs text-gray-300">SDN 005 Tanjung Pandan</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="px-4 py-2 text-gray-300 hover:text-white transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>Kembali
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-16">
+        <div class="px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Page Header -->
+            <div class="mb-8 flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900">Template Surat</h2>
+                    <p class="text-gray-600">Kelola template surat untuk kemudahan pembuatan surat</p>
+                </div>
+                <button @click="showAddTemplateModal = true" class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors">
+                    <i class="fas fa-plus mr-2"></i>Tambah Template
+                </button>
+            </div>
+
+            <!-- Template Statistics -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover-scale">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-blue-100 rounded-lg">
+                            <i class="fas fa-file-alt text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500">Total Template</p>
+                            <p class="text-2xl font-bold text-gray-900" x-text="templates.length"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover-scale">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-green-100 rounded-lg">
+                            <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500">Aktif</p>
+                            <p class="text-2xl font-bold text-gray-900" x-text="templates.filter(t => t.status === 'Aktif').length"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover-scale">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-yellow-100 rounded-lg">
+                            <i class="fas fa-edit text-yellow-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500">Draft</p>
+                            <p class="text-2xl font-bold text-gray-900" x-text="templates.filter(t => t.status === 'Draft').length"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover-scale">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-purple-100 rounded-lg">
+                            <i class="fas fa-layer-group text-purple-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500">Kategori</p>
+                            <p class="text-2xl font-bold text-gray-900" x-text="new Set(templates.map(t => t.kategori)).size"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Template List -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                <div class="p-4 border-b border-gray-200">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+                        <div class="flex space-x-2">
+                            <input type="text" x-model="searchQuery" @input="filterTemplates" placeholder="Cari template..." class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                            <select x-model="categoryFilter" @change="filterTemplates" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                                <option value="">Semua Kategori</option>
+                                <template x-for="kategori in categories" :key="kategori">
+                                    <option :value="kategori" x-text="kategori"></option>
+                                </template>
+                            </select>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button @click="refreshTemplates" class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                <i class="fas fa-sync-alt mr-2"></i>Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+                    <template x-for="template in filteredTemplates" :key="template.id">
+                        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="flex items-center">
+                                    <div class="p-2 bg-teal-100 rounded-lg mr-3">
+                                        <i class="fas fa-file-alt text-teal-600"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-medium text-gray-900" x-text="template.nama"></h3>
+                                        <span class="text-xs text-gray-500" x-text="template.kategori"></span>
+                                    </div>
+                                </div>
+                                <span :class="{
+                                    'px-2 py-1 text-xs rounded-full': true,
+                                    'bg-green-100 text-green-800': template.status === 'Aktif',
+                                    'bg-yellow-100 text-yellow-800': template.status === 'Draft'
+                                }" x-text="template.status"></span>
+                            </div>
+                            
+                            <div class="text-sm text-gray-600 mb-3">
+                                <p class="line-clamp-2">
+                                    <i class="fas fa-code mr-1"></i>
+                                    <span x-text="template.variables || 'Tidak ada variabel'"></span>
+                                </p>
+                            </div>
+                            
+                            <div class="flex items-center justify-between text-xs text-gray-500 mb-3">
+                                <span><i class="fas fa-file-google mr-1"></i>Google Doc</span>
+                                <span><i class="fas fa-calendar mr-1"></i><span x-text="formatDate(template.updatedAt)"></span></span>
+                            </div>
+                            
+                            <div class="flex space-x-2">
+                                <button @click="editTemplate(template)" class="flex-1 px-3 py-2 bg-teal-600 text-white text-sm rounded hover:bg-teal-700">
+                                    <i class="fas fa-edit mr-1"></i>Edit
+                                </button>
+                                <button @click="deleteTemplate(template.id)" class="px-3 py-2 border border-red-300 text-red-600 text-sm rounded hover:bg-red-50">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add/Edit Template Modal -->
+    <div x-show="showAddTemplateModal" x-cloak 
+         class="fixed inset-0 z-50 overflow-y-auto"
+         aria-labelledby="modal-title"
+         role="dialog"
+         aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="closeTemplateModal"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+                <form @submit.prevent="saveTemplate">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <div class="mb-4">
+                            <h3 class="text-lg font-medium text-gray-900" x-text="editingTemplate ? 'Edit Template' : 'Tambah Template Baru'"></h3>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nama Template</label>
+                                <input type="text" x-model="templateForm.nama" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
+                                <select x-model="templateForm.kategori" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                                    <option value="">Pilih Kategori</option>
+                                    <option value="Undangan">Undangan</option>
+                                    <option value="Edaran">Edaran</option>
+                                    <option value="Pemberitahuan">Pemberitahuan</option>
+                                    <option value="Pengantar">Pengantar</option>
+                                    <option value="Keterangan">Keterangan</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Variabel Template</label>
+                            <input type="text" x-model="templateForm.variables" placeholder="Contoh: {{nomorSurat}}, {{perihal}}, {{tujuan}}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                            <p class="text-xs text-gray-500 mt-1">Pisahkan variabel dengan koma. Gunakan format {{variable}}</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Isi Template</label>
+                            <div class="border border-gray-300 rounded-lg overflow-hidden">
+                                <div class="bg-gray-50 px-3 py-2 border-b border-gray-300 flex items-center justify-between">
+                                    <div class="flex space-x-2">
+                                        <button type="button" @click="insertVariable('{{nomorSurat}}')" class="px-2 py-1 text-xs bg-teal-100 text-teal-700 rounded hover:bg-teal-200">
+                                            {{nomorSurat}}
+                                        </button>
+                                        <button type="button" @click="insertVariable('{{perihal}}')" class="px-2 py-1 text-xs bg-teal-100 text-teal-700 rounded hover:bg-teal-200">
+                                            {{perihal}}
+                                        </button>
+                                        <button type="button" @click="insertVariable('{{tujuan}}')" class="px-2 py-1 text-xs bg-teal-100 text-teal-700 rounded hover:bg-teal-200">
+                                            {{tujuan}}
+                                        </button>
+                                        <button type="button" @click="insertVariable('{{tanggal}}')" class="px-2 py-1 text-xs bg-teal-100 text-teal-700 rounded hover:bg-teal-200">
+                                            {{tanggal}}
+                                        </button>
+                                    </div>
+                                    <span class="text-xs text-gray-500">Gunakan variabel dengan format {{variable}}</span>
+                                </div>
+                                <textarea x-model="templateForm.isi" 
+                                          x-ref="templateEditor"
+                                          required
+                                          rows="15"
+                                          class="w-full px-3 py-2 border-0 focus:ring-0"
+                                          placeholder="Tulis isi template surat di sini...&#10;&#10;Variabel yang tersedia:&#10;{{nomorSurat}} - Nomor surat otomatis&#10;{{perihal}} - Perihal surat&#10;{{tujuan}} - Tujuan surat&#10;{{tanggal}} - Tanggal surat"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                            <select x-model="templateForm.status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                                <option value="Aktif">Aktif</option>
+                                <option value="Draft">Draft</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                        <button type="submit" class="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-teal-600 text-base font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:ml-3 sm:w-auto sm:text-sm">
+                            <span x-text="editingTemplate ? 'Update Template' : 'Simpan Template'"></span>
+                        </button>
+                        <button type="button" @click="closeTemplateModal" class="mt-3 w-full inline-flex justify-center rounded-lg border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                            Batal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div x-show="notification.show" x-cloak 
+         class="fixed top-20 right-4 z-50 p-4 rounded-lg shadow-lg"
+         :class="{
+             'bg-green-100 border border-green-400 text-green-700': notification.type === 'success',
+             'bg-red-100 border border-red-400 text-red-700': notification.type === 'error'
+         }">
+        <div class="flex items-center">
+            <i :class="{
+                'fas fa-check-circle': notification.type === 'success',
+                'fas fa-exclamation-circle': notification.type === 'error'
+            }" class="mr-2"></i>
+            <span x-text="notification.message"></span>
+        </div>
+    </div>
+
+    <script>
+        function templateManager() {
+            return {
+                sidebarOpen: false,
+                currentPage: 'template',
+                userRole: 'admin',
+                templates: [],
+                filteredTemplates: [],
+                categories: [],
+                searchQuery: '',
+                categoryFilter: '',
+                showAddTemplateModal: false,
+                editingTemplate: null,
+                templateForm: {
+                    nama: '',
+                    kategori: '',
+                    variables: '',
+                    isi: '',
+                    status: 'Aktif'
+                },
+                notification: {
+                    show: false,
+                    type: 'success',
+                    message: ''
+                },
+                loading: false,
+
+                init() {
+                    this.loadTemplates();
+                },
+
+                async loadTemplates() {
+                    try {
+                        this.loading = true;
+                        const response = await this.apiCall('getTemplates');
+                        
+                        if (response.status === 'success') {
+                            this.templates = response.data || [];
+                            this.filteredTemplates = this.templates;
+                            this.categories = [...new Set(this.templates.map(t => t.kategori))];
+                        } else {
+                            this.showNotification(response.message || 'Gagal memuat templates', 'error');
+                        }
+                    } catch (error) {
+                        this.showNotification('Terjadi kesalahan saat memuat templates', 'error');
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                filterTemplates() {
+                    let filtered = this.templates;
+                    
+                    if (this.searchQuery) {
+                        filtered = filtered.filter(template => 
+                            template.nama.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                            template.kategori.toLowerCase().includes(this.searchQuery.toLowerCase())
+                        );
+                    }
+                    
+                    if (this.categoryFilter) {
+                        filtered = filtered.filter(template => template.kategori === this.categoryFilter);
+                    }
+                    
+                    this.filteredTemplates = filtered;
+                },
+
+                async saveTemplate() {
+                    try {
+                        const data = {
+                            nama: this.templateForm.nama,
+                            kategori: this.templateForm.kategori,
+                            variables: this.templateForm.variables,
+                            isi: this.templateForm.isi,
+                            status: this.templateForm.status
+                        };
+
+                        let response;
+                        if (this.editingTemplate) {
+                            response = await this.apiCall('updateTemplate', {
+                                templateId: this.editingTemplate.id,
+                                ...data
+                            });
+                        } else {
+                            response = await this.apiCall('createTemplate', data);
+                        }
+
+                        if (response.status === 'success') {
+                            this.showNotification(
+                                this.editingTemplate ? 'Template berhasil diupdate' : 'Template berhasil dibuat', 
+                                'success'
+                            );
+                            this.closeTemplateModal();
+                            this.loadTemplates();
+                        } else {
+                            this.showNotification(response.message || 'Gagal menyimpan template', 'error');
+                        }
+                    } catch (error) {
+                        this.showNotification('Terjadi kesalahan saat menyimpan template', 'error');
+                    }
+                },
+
+                editTemplate(template) {
+                    this.editingTemplate = template;
+                    this.templateForm = {
+                        nama: template.nama,
+                        kategori: template.kategori,
+                        variables: template.variables,
+                        isi: '', // Will be loaded from Google Doc
+                        status: template.status
+                    };
+                    this.showAddTemplateModal = true;
+                },
+
+                async deleteTemplate(templateId) {
+                    if (!confirm('Apakah Anda yakin ingin menghapus template ini?')) {
+                        return;
+                    }
+
+                    try {
+                        const response = await this.apiCall('deleteTemplate', { templateId });
+                        
+                        if (response.status === 'success') {
+                            this.showNotification('Template berhasil dihapus', 'success');
+                            this.loadTemplates();
+                        } else {
+                            this.showNotification(response.message || 'Gagal menghapus template', 'error');
+                        }
+                    } catch (error) {
+                        this.showNotification('Terjadi kesalahan saat menghapus template', 'error');
+                    }
+                },
+
+                closeTemplateModal() {
+                    this.showAddTemplateModal = false;
+                    this.editingTemplate = null;
+                    this.templateForm = {
+                        nama: '',
+                        kategori: '',
+                        variables: '',
+                        isi: '',
+                        status: 'Aktif'
+                    };
+                },
+
+                insertVariable(variable) {
+                    const textarea = this.$refs.templateEditor;
+                    const start = textarea.selectionStart;
+                    const end = textarea.selectionEnd;
+                    const text = this.templateForm.isi;
+                    
+                    this.templateForm.isi = text.substring(0, start) + variable + text.substring(end);
+                    
+                    this.$nextTick(() => {
+                        textarea.focus();
+                        textarea.setSelectionRange(start + variable.length, start + variable.length);
+                    });
+                },
+
+                refreshTemplates() {
+                    this.loadTemplates();
+                },
+
+                formatDate(dateString) {
+                    if (!dateString) return '';
+                    const date = new Date(dateString);
+                    return date.toLocaleDateString('id-ID');
+                },
+
+                showNotification(message, type = 'success') {
+                    this.notification = {
+                        show: true,
+                        type: type,
+                        message: message
+                    };
+                    
+                    setTimeout(() => {
+                        this.notification.show = false;
+                    }, 3000);
+                },
+
+                async apiCall(action, data = {}) {
+                    const API_BASE = 'https://script.google.com/macros/s/AKfycbxtLfyDfzhDiQvU2saKpU0zIRPQKCQyj46Fs4tLK7r8nt3LoHNSbMFd0vRkYXavSJfc/exec';
+                    
+                    try {
+                        const response = await fetch(`${API_BASE}?action=${action}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(data)
+                        });
+                        
+                        return await response.json();
+                    } catch (error) {
+                        console.error('API Error:', error);
+                        return { status: 'error', message: error.toString() };
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
