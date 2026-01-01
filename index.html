@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" x-data="{ sidebarOpen: false, currentPage: 'dashboard', userRole: 'admin' }">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="assets/js/app.js"></script>
     <style>
         [x-cloak] { display: none !important; }
         .sidebar-transition { transition: transform 0.3s ease-in-out; }
@@ -15,39 +14,6 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Custom color palette - Eyes Friendly */
-        :root {
-            --primary: #14b8a6;      /* Soft teal */
-            --primary-light: #2dd4bf;
-            --primary-dark: #0d9488;
-            --secondary: #06b6d4;    /* Soft blue */
-            --secondary-light: #0284c7;
-            --secondary-dark: #075985;
-            --accent: #8b5cf6;       /* Soft purple */
-            --accent-light: #a78bfa;
-            --accent-dark: #7c3aed;
-            --success: #10b981;      /* Soft green */
-            --success-light: #34d399;
-            --success-dark: #059669;
-            --warning: #f59e0b;      /* Soft amber */
-            --warning-light: #fbbf24;
-            --warning-dark: #d97706;
-            --danger: #ef4444;        /* Soft red */
-            --danger-light: #f87171;
-            --danger-dark: #dc2626;
-            --neutral-50: #f9fafb;
-            --neutral-100: #f3f4f6;
-            --neutral-200: #e5e7eb;
-            --neutral-300: #d1d5db;
-            --neutral-400: #9ca3af;
-            --neutral-500: #64748b;
-            --neutral-600: #475569;
-            --neutral-700: #334155;
-            --neutral-800: #1e293b;
-            --neutral-900: #0f172a;
-            --white: #ffffff;
         }
         
         /* Dark Sidebar Styles */
@@ -95,56 +61,6 @@
             background: rgba(107, 114, 128, 0.9);
         }
         
-        .sidebar-scrollable::-webkit-scrollbar-thumb:active {
-            background: rgba(156, 163, 175, 0.9);
-        }
-        
-        /* Card styles */
-        .card {
-            background: var(--white);
-            border: 1px solid var(--neutral-200);
-            border-radius: 0.75rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            transition: all 0.2s ease-in-out;
-        }
-        
-        .card:hover {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            transform: translateY(-2px);
-        }
-        
-        /* Button styles */
-        .btn-primary {
-            background: var(--primary);
-            color: var(--white);
-            border-radius: 0.5rem;
-            padding: 0.625rem 1.25rem;
-            font-weight: 500;
-            transition: all 0.2s ease-in-out;
-            border: none;
-        }
-        
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-        
-        .btn-secondary {
-            background: var(--white);
-            color: var(--neutral-700);
-            border: 1px solid var(--neutral-300);
-            border-radius: 0.5rem;
-            padding: 0.625rem 1.25rem;
-            font-weight: 500;
-            transition: all 0.2s ease-in-out;
-        }
-        
-        .btn-secondary:hover {
-            background: var(--neutral-50);
-            border-color: var(--neutral-400);
-            color: var(--neutral-800);
-        }
-        
         /* Dark sidebar menu styles */
         .sidebar-menu-item {
             color: #d1d5db;
@@ -176,72 +92,113 @@
             background: rgba(20, 184, 166, 0.1);
             color: #14b8a6;
         }
+
+        /* Button styles */
+        .btn-primary {
+            background: #14b8a6;
+            color: white;
+            border-radius: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: #0d9488;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #475569;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .btn-secondary:hover {
+            background: #f8fafc;
+            border-color: #9ca3af;
+            color: #334155;
+        }
+
+        /* Print styles */
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { font-size: 12pt; }
+            .print-header { text-align: center; margin-bottom: 20px; }
+            .print-footer { margin-top: 30px; text-align: center; }
+        }
     </style>
 </head>
-<body class="bg-gray-50 font-sans">
+<body class="bg-gray-50 font-sans" x-data="sistemKearsipan()">
     <!-- Header -->
-    <header class="bg-white border-b border-neutral-200 fixed top-0 left-0 right-0 z-40">
+    <header class="fixed top-0 left-0 right-0 z-40 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 border-b border-gray-700 shadow-xl backdrop-blur-sm">
         <div class="px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
-                    <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-md text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 lg:hidden">
+                    <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white transition-all duration-300 lg:hidden">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                     <div class="flex-shrink-0 flex items-center ml-4 lg:ml-0">
-                        <i class="fas fa-school text-primary text-2xl mr-3"></i>
+                        <i class="fas fa-school text-teal-600 text-2xl mr-3"></i>
                         <div>
-                            <h1 class="text-xl font-bold text-neutral-900">Sistem Kearsipan Surat</h1>
-                            <p class="text-xs text-neutral-500">SDN 005</p>
+                            <h1 class="text-xl font-bold text-white">Sistem Kearsipan Surat</h1>
+                            <p class="text-xs text-gray-300">SDN 005 Tanjung Pandan</p>
                         </div>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
                     <div class="relative" x-data="{ notificationOpen: false }">
-                        <button @click="notificationOpen = !notificationOpen" class="p-2 rounded-full text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 relative">
+                        <button @click="notificationOpen = !notificationOpen" class="p-2 rounded-full text-gray-300 hover:text-white hover:bg-gray-700 relative">
                             <i class="fas fa-bell text-lg"></i>
-                            <span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-danger"></span>
+                            <span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500"></span>
                         </button>
                         <div x-show="notificationOpen" @click.away="notificationOpen = false" x-cloak
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 transform scale-95"
                              x-transition:enter-end="opacity-100 transform scale-100"
-                             class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-neutral-200 z-50">
-                            <div class="p-4 border-b border-neutral-200">
-                                <h3 class="text-sm font-medium text-neutral-900">Notifikasi</h3>
+                             class="absolute right-0 mt-2 w-80 bg-gray-800 rounded-lg shadow-xl border border-gray-700 z-50">
+                            <div class="p-4 border-b border-gray-700">
+                                <h3 class="text-sm font-medium text-white">Notifikasi</h3>
                             </div>
                             <div class="max-h-64 overflow-y-auto">
-                                <div class="p-3 hover:bg-neutral-50 cursor-pointer border-b border-neutral-100">
-                                    <p class="text-sm text-neutral-900">Surat masuk baru dari Dinas Pendidikan</p>
-                                    <p class="text-xs text-neutral-500 mt-1">2 jam yang lalu</p>
+                                <div class="p-3 hover:bg-gray-700 cursor-pointer border-b border-gray-600">
+                                    <p class="text-sm text-white">Surat masuk baru dari Dinas Pendidikan</p>
+                                    <p class="text-xs text-gray-400 mt-1">2 jam yang lalu</p>
                                 </div>
-                                <div class="p-3 hover:bg-neutral-50 cursor-pointer">
-                                    <p class="text-sm text-neutral-900">Template surat baru ditambahkan</p>
-                                    <p class="text-xs text-neutral-500 mt-1">1 hari yang lalu</p>
+                                <div class="p-3 hover:bg-gray-700 cursor-pointer">
+                                    <p class="text-sm text-white">Template surat baru ditambahkan</p>
+                                    <p class="text-xs text-gray-400 mt-1">1 hari yang lalu</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="relative" x-data="{ profileOpen: false }">
-                        <button @click="profileOpen = !profileOpen" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-neutral-100">
-                            <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                        <button @click="profileOpen = !profileOpen" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-700">
+                            <div class="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center">
                                 <span class="text-white text-sm font-medium" x-text="userRole === 'admin' ? 'A' : userRole === 'pimpinan' ? 'P' : 'U'"></span>
                             </div>
-                            <span class="hidden md:block text-sm font-medium text-neutral-700" x-text="userRole === 'admin' ? 'Admin' : userRole === 'pimpinan' ? 'Pimpinan' : 'User'"></span>
-                            <i class="fas fa-chevron-down text-xs text-neutral-500"></i>
+                            <span class="hidden md:block text-sm font-medium text-white" x-text="userRole === 'admin' ? 'Admin' : userRole === 'pimpinan' ? 'Pimpinan' : 'User'"></span>
+                            <i class="fas fa-chevron-down text-xs text-gray-400"></i>
                         </button>
                         <div x-show="profileOpen" @click.away="profileOpen = false" x-cloak
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 transform scale-95"
                              x-transition:enter-end="opacity-100 transform scale-100"
-                             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-neutral-200 z-50">
-                            <a href="#" class="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
+                             class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-xl border border-gray-700 z-50">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
                                 <i class="fas fa-user mr-2"></i> Profil
                             </a>
-                            <a href="#" class="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
                                 <i class="fas fa-cog mr-2"></i> Pengaturan
                             </a>
-                            <hr class="my-1 border-neutral-200">
-                            <a href="#" @click="logout()" class="block px-4 py-2 text-sm text-danger hover:bg-red-50">
+                            <hr class="my-1 border-gray-700">
+                            <a href="#" @click="logout()" class="block px-4 py-2 text-sm text-red-400 hover:bg-red-900 hover:text-red-300">
                                 <i class="fas fa-sign-out-alt mr-2"></i> Keluar
                             </a>
                         </div>
@@ -323,52 +280,40 @@
                         <i :class="agendaSuratOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
                     </button>
                     <div x-show="agendaSuratOpen" x-cloak x-transition class="ml-8 mt-1 space-y-1">
-                        <!-- Surat Masuk -->
                         <div x-data="{ suratMasukOpen: false }">
-                            <button @click="suratMasukOpen = !suratMasukOpen" 
-                                   class="w-full flex items-center px-3 py-2 text-sm rounded sidebar-submenu">
-                                <i class="fas fa-envelope-open-text mr-2 text-xs"></i>
+                            <button @click="suratMasukOpen = !suratMasukOpen; currentPage = 'agenda-masuk'; sidebarOpen = false"
+                                   :class="currentPage === 'agenda-masuk' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                                   class="w-full flex items-center px-3 py-2 text-sm rounded">
+                                <i class="fas fa-inbox mr-2 text-xs"></i>
                                 <span class="flex-1 text-left">Masuk</span>
                                 <i :class="suratMasukOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
                             </button>
                             <div x-show="suratMasukOpen" x-cloak x-transition class="ml-8 mt-1 space-y-1">
-                                <a href="#" @click="currentPage = 'agenda-masuk-upload'; sidebarOpen = false"
-                                   :class="currentPage === 'agenda-masuk-upload' ? 'sidebar-submenu active' : 'sidebar-submenu'"
-                                   class="block px-3 py-2 text-sm rounded">
-                                    <i class="fas fa-upload mr-2 text-xs"></i>Upload berkas surat masuk
+                                <a href="#" @click="currentPage = 'agenda-masuk-upload'; sidebarOpen = false" class="block px-3 py-2 text-xs text-gray-400 hover:text-gray-200">
+                                    • Upload berkas surat masuk
                                 </a>
-                                <a href="#" @click="currentPage = 'agenda-masuk-disposisi'; sidebarOpen = false"
-                                   :class="currentPage === 'agenda-masuk-disposisi' ? 'sidebar-submenu active' : 'sidebar-submenu'"
-                                   class="block px-3 py-2 text-sm rounded"
-                                   x-show="['admin', 'pimpinan'].includes(userRole)">
-                                    <i class="fas fa-stamp mr-2 text-xs"></i>Disposisi surat
+                                <a href="#" @click="currentPage = 'agenda-masuk-disposisi'; sidebarOpen = false" class="block px-3 py-2 text-xs text-gray-400 hover:text-gray-200" x-show="['admin', 'pimpinan'].includes(userRole)">
+                                    • Disposisi surat
                                 </a>
-                                <a href="#" @click="currentPage = 'agenda-masuk-daftar'; sidebarOpen = false"
-                                   :class="currentPage === 'agenda-masuk-daftar' ? 'sidebar-submenu active' : 'sidebar-submenu'"
-                                   class="block px-3 py-2 text-sm rounded">
-                                    <i class="fas fa-list mr-2 text-xs"></i>Daftar Surat Masuk
+                                <a href="#" @click="currentPage = 'agenda-masuk-daftar'; sidebarOpen = false" class="block px-3 py-2 text-xs text-gray-400 hover:text-gray-200">
+                                    • Daftar Surat Masuk
                                 </a>
                             </div>
                         </div>
-
-                        <!-- Surat Keluar -->
                         <div x-data="{ suratKeluarOpen: false }">
-                            <button @click="suratKeluarOpen = !suratKeluarOpen" 
-                                   class="w-full flex items-center px-3 py-2 text-sm rounded sidebar-submenu">
+                            <button @click="suratKeluarOpen = !suratKeluarOpen; currentPage = 'agenda-keluar'; sidebarOpen = false"
+                                   :class="currentPage === 'agenda-keluar' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                                   class="w-full flex items-center px-3 py-2 text-sm rounded">
                                 <i class="fas fa-paper-plane mr-2 text-xs"></i>
                                 <span class="flex-1 text-left">Keluar</span>
                                 <i :class="suratKeluarOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
                             </button>
                             <div x-show="suratKeluarOpen" x-cloak x-transition class="ml-8 mt-1 space-y-1">
-                                <a href="#" @click="currentPage = 'agenda-keluar-upload'; sidebarOpen = false"
-                                   :class="currentPage === 'agenda-keluar-upload' ? 'sidebar-submenu active' : 'sidebar-submenu'"
-                                   class="block px-3 py-2 text-sm rounded">
-                                    <i class="fas fa-upload mr-2 text-xs"></i>Upload berkas surat keluar
+                                <a href="#" @click="currentPage = 'agenda-keluar-upload'; sidebarOpen = false" class="block px-3 py-2 text-xs text-gray-400 hover:text-gray-200">
+                                    • Upload berkas surat keluar
                                 </a>
-                                <a href="#" @click="currentPage = 'agenda-keluar-daftar'; sidebarOpen = false"
-                                   :class="currentPage === 'agenda-keluar-daftar' ? 'sidebar-submenu active' : 'sidebar-submenu'"
-                                   class="block px-3 py-2 text-sm rounded">
-                                    <i class="fas fa-list mr-2 text-xs"></i>Daftar Surat Keluar
+                                <a href="#" @click="currentPage = 'agenda-keluar-daftar'; sidebarOpen = false" class="block px-3 py-2 text-xs text-gray-400 hover:text-gray-200">
+                                    • Daftar Surat Keluar
                                 </a>
                             </div>
                         </div>
@@ -414,10 +359,15 @@
                         <a href="#" @click="currentPage = 'tentang-feedback'; sidebarOpen = false"
                            :class="currentPage === 'tentang-feedback' ? 'sidebar-submenu active' : 'sidebar-submenu'"
                            class="block px-3 py-2 text-sm rounded">
-                            <i class="fas fa-comment-dots mr-2 text-xs"></i>Feedback / Kontak / Masukan
+                            <i class="fas fa-comment-dots mr-2 text-xs"></i>Feedback / Kontak
                         </a>
-                        <a href="#" @click="logout(); sidebarOpen = false"
-                           class="block px-3 py-2 text-sm rounded sidebar-submenu">
+                        <a href="#" @click="currentPage = 'tentang-masukan'; sidebarOpen = false"
+                           :class="currentPage === 'tentang-masukan' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                           class="block px-3 py-2 text-sm rounded">
+                            <i class="fas fa-lightbulb mr-2 text-xs"></i>Masukan
+                        </a>
+                        <hr class="my-2 border-gray-700">
+                        <a href="#" @click="logout(); sidebarOpen = false" class="block px-3 py-2 text-sm rounded text-red-400 hover:bg-red-900">
                             <i class="fas fa-sign-out-alt mr-2 text-xs"></i>Logout
                         </a>
                     </div>
@@ -490,52 +440,40 @@
                         <i :class="agendaSuratOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
                     </button>
                     <div x-show="agendaSuratOpen" x-cloak x-transition class="ml-8 mt-1 space-y-1">
-                        <!-- Surat Masuk -->
                         <div x-data="{ suratMasukOpen: false }">
-                            <button @click="suratMasukOpen = !suratMasukOpen" 
-                                   class="w-full flex items-center px-3 py-2 text-sm rounded sidebar-submenu">
-                                <i class="fas fa-envelope-open-text mr-2 text-xs"></i>
+                            <button @click="suratMasukOpen = !suratMasukOpen; currentPage = 'agenda-masuk'"
+                                   :class="currentPage === 'agenda-masuk' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                                   class="w-full flex items-center px-3 py-2 text-sm rounded">
+                                <i class="fas fa-inbox mr-2 text-xs"></i>
                                 <span class="flex-1 text-left">Masuk</span>
                                 <i :class="suratMasukOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
                             </button>
                             <div x-show="suratMasukOpen" x-cloak x-transition class="ml-8 mt-1 space-y-1">
-                                <a href="#" @click="currentPage = 'agenda-masuk-upload'"
-                                   :class="currentPage === 'agenda-masuk-upload' ? 'sidebar-submenu active' : 'sidebar-submenu'"
-                                   class="block px-3 py-2 text-sm rounded">
-                                    <i class="fas fa-upload mr-2 text-xs"></i>Upload berkas surat masuk
+                                <a href="#" @click="currentPage = 'agenda-masuk-upload'" class="block px-3 py-2 text-xs text-gray-400 hover:text-gray-200">
+                                    • Upload berkas surat masuk
                                 </a>
-                                <a href="#" @click="currentPage = 'agenda-masuk-disposisi'"
-                                   :class="currentPage === 'agenda-masuk-disposisi' ? 'sidebar-submenu active' : 'sidebar-submenu'"
-                                   class="block px-3 py-2 text-sm rounded"
-                                   x-show="['admin', 'pimpinan'].includes(userRole)">
-                                    <i class="fas fa-stamp mr-2 text-xs"></i>Disposisi surat
+                                <a href="#" @click="currentPage = 'agenda-masuk-disposisi'" class="block px-3 py-2 text-xs text-gray-400 hover:text-gray-200" x-show="['admin', 'pimpinan'].includes(userRole)">
+                                    • Disposisi surat
                                 </a>
-                                <a href="#" @click="currentPage = 'agenda-masuk-daftar'"
-                                   :class="currentPage === 'agenda-masuk-daftar' ? 'sidebar-submenu active' : 'sidebar-submenu'"
-                                   class="block px-3 py-2 text-sm rounded">
-                                    <i class="fas fa-list mr-2 text-xs"></i>Daftar Surat Masuk
+                                <a href="#" @click="currentPage = 'agenda-masuk-daftar'" class="block px-3 py-2 text-xs text-gray-400 hover:text-gray-200">
+                                    • Daftar Surat Masuk
                                 </a>
                             </div>
                         </div>
-
-                        <!-- Surat Keluar -->
                         <div x-data="{ suratKeluarOpen: false }">
-                            <button @click="suratKeluarOpen = !suratKeluarOpen" 
-                                   class="w-full flex items-center px-3 py-2 text-sm rounded sidebar-submenu">
+                            <button @click="suratKeluarOpen = !suratKeluarOpen; currentPage = 'agenda-keluar'"
+                                   :class="currentPage === 'agenda-keluar' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                                   class="w-full flex items-center px-3 py-2 text-sm rounded">
                                 <i class="fas fa-paper-plane mr-2 text-xs"></i>
                                 <span class="flex-1 text-left">Keluar</span>
                                 <i :class="suratKeluarOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
                             </button>
                             <div x-show="suratKeluarOpen" x-cloak x-transition class="ml-8 mt-1 space-y-1">
-                                <a href="#" @click="currentPage = 'agenda-keluar-upload'"
-                                   :class="currentPage === 'agenda-keluar-upload' ? 'sidebar-submenu active' : 'sidebar-submenu'"
-                                   class="block px-3 py-2 text-sm rounded">
-                                    <i class="fas fa-upload mr-2 text-xs"></i>Upload berkas surat keluar
+                                <a href="#" @click="currentPage = 'agenda-keluar-upload'" class="block px-3 py-2 text-xs text-gray-400 hover:text-gray-200">
+                                    • Upload berkas surat keluar
                                 </a>
-                                <a href="#" @click="currentPage = 'agenda-keluar-daftar'"
-                                   :class="currentPage === 'agenda-keluar-daftar' ? 'sidebar-submenu active' : 'sidebar-submenu'"
-                                   class="block px-3 py-2 text-sm rounded">
-                                    <i class="fas fa-list mr-2 text-xs"></i>Daftar Surat Keluar
+                                <a href="#" @click="currentPage = 'agenda-keluar-daftar'" class="block px-3 py-2 text-xs text-gray-400 hover:text-gray-200">
+                                    • Daftar Surat Keluar
                                 </a>
                             </div>
                         </div>
@@ -581,10 +519,15 @@
                         <a href="#" @click="currentPage = 'tentang-feedback'"
                            :class="currentPage === 'tentang-feedback' ? 'sidebar-submenu active' : 'sidebar-submenu'"
                            class="block px-3 py-2 text-sm rounded">
-                            <i class="fas fa-comment-dots mr-2 text-xs"></i>Feedback / Kontak / Masukan
+                            <i class="fas fa-comment-dots mr-2 text-xs"></i>Feedback / Kontak
                         </a>
-                        <a href="#" @click="logout()"
-                           class="block px-3 py-2 text-sm rounded sidebar-submenu">
+                        <a href="#" @click="currentPage = 'tentang-masukan'"
+                           :class="currentPage === 'tentang-masukan' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                           class="block px-3 py-2 text-sm rounded">
+                            <i class="fas fa-lightbulb mr-2 text-xs"></i>Masukan
+                        </a>
+                        <hr class="my-2 border-gray-700">
+                        <a href="#" @click="logout()" class="block px-3 py-2 text-sm rounded text-red-400 hover:bg-red-900">
                             <i class="fas fa-sign-out-alt mr-2 text-xs"></i>Logout
                         </a>
                     </div>
@@ -592,26 +535,26 @@
             </nav>
         </div>
     </aside>
-
+    
     <!-- Main Content -->
     <main class="lg:ml-64 pt-16">
         <div class="px-4 sm:px-6 lg:px-8 py-8">
             <!-- Dashboard Page -->
             <div x-show="currentPage === 'dashboard'" x-cloak class="fade-in">
                 <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-neutral-900">Dashboard</h2>
-                    <p class="text-neutral-600">Selamat datang di Sistem Kearsipan Surat SDN 005</p>
+                    <h2 class="text-2xl font-bold text-gray-900">Dashboard</h2>
+                    <p class="text-gray-600">Selamat datang di Sistem Kearsipan Surat SDN 005</p>
                 </div>
 
                 <!-- Welcome Section -->
-                <div class="bg-white rounded-xl shadow-sm border-neutral-200 p-8 mb-8">
+                <div class="bg-white rounded-xl shadow-sm border-gray-200 p-8 mb-8">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h3 class="text-lg font-semibold text-neutral-900">Selamat Datang!</h3>
-                            <p class="text-neutral-600">Sistem kearsipan surat digital siap membantu pekerjaan administrasi sekolah Anda.</p>
+                            <h3 class="text-lg font-semibold text-gray-900">Selamat Datang!</h3>
+                            <p class="text-gray-600">Sistem kearsipan surat digital siap membantu pekerjaan administrasi sekolah Anda.</p>
                         </div>
                         <div class="text-right">
-                            <span class="inline-flex items-center px-3 py-1 rounded-full bg-success text-white text-sm font-medium">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-800 text-sm font-medium">
                                 <i class="fas fa-check-circle mr-2"></i>
                                 <span x-text="userRole === 'admin' ? 'Administrator' : userRole === 'pimpinan' ? 'Pimpinan' : 'User'"></span>
                             </span>
@@ -621,47 +564,47 @@
 
                 <!-- Quick Actions -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                    <div class="card p-6 hover:shadow-lg cursor-pointer" @click="currentPage = 'buat-surat-keluar'" x-show="['admin', 'user'].includes(userRole)">
+                    <div class="bg-white rounded-xl shadow-sm border-gray-200 p-6 hover:shadow-lg cursor-pointer transition-shadow" @click="currentPage = 'buat-surat-keluar'" x-show="['admin', 'user'].includes(userRole)">
                         <div class="flex items-center">
-                            <div class="p-3 bg-primary rounded-xl mr-4">
+                            <div class="p-3 bg-teal-600 rounded-xl mr-4">
                                 <i class="fas fa-plus-circle text-white text-xl"></i>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-neutral-900">Buat Surat</h4>
-                                <p class="text-sm text-neutral-600">Buat surat keluar dengan template</p>
+                                <h4 class="font-semibold text-gray-900">Buat Surat</h4>
+                                <p class="text-sm text-gray-600">Buat surat keluar dengan template</p>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="card p-6 hover:shadow-lg cursor-pointer" @click="currentPage = 'agenda-masuk-upload'">
+                    <div class="bg-white rounded-xl shadow-sm border-gray-200 p-6 hover:shadow-lg cursor-pointer transition-shadow" @click="currentPage = 'agenda-masuk-upload'">
                         <div class="flex items-center">
-                            <div class="p-3 bg-secondary rounded-xl mr-4">
+                            <div class="p-3 bg-blue-600 rounded-xl mr-4">
                                 <i class="fas fa-upload text-white text-xl"></i>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-neutral-900">Upload Surat Masuk</h4>
-                                <p class="text-sm text-neutral-600">Upload surat masuk baru</p>
+                                <h4 class="font-semibold text-gray-900">Upload Surat Masuk</h4>
+                                <p class="text-sm text-gray-600">Upload surat masuk baru</p>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="card p-6 hover:shadow-lg cursor-pointer" @click="currentPage = 'arsip-register'">
+                    <div class="bg-white rounded-xl shadow-sm border-gray-200 p-6 hover:shadow-lg cursor-pointer transition-shadow" @click="currentPage = 'arsip-register'">
                         <div class="flex items-center">
-                            <div class="p-3 bg-accent rounded-xl mr-4">
+                            <div class="p-3 bg-purple-600 rounded-xl mr-4">
                                 <i class="fas fa-archive text-white text-xl"></i>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-neutral-900">Register Arsip</h4>
-                                <p class="text-sm text-neutral-600">Daftarkan dokumen</p>
+                                <h4 class="font-semibold text-gray-900">Register Arsip</h4>
+                                <p class="text-sm text-gray-600">Daftarkan dokumen</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Recent Activity -->
-                <div class="bg-white rounded-xl shadow-sm border-neutral-200 p-8">
+                <div class="bg-white rounded-xl shadow-sm border-gray-200 p-8">
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-lg font-semibold text-neutral-900">Aktivitas Terkini</h3>
+                        <h3 class="text-lg font-semibold text-gray-900">Aktivitas Terkini</h3>
                         <button class="btn-secondary text-sm">
                             <i class="fas fa-sync-alt mr-2"></i>
                             Refresh
@@ -669,472 +612,377 @@
                     </div>
                     
                     <div class="space-y-4">
-                        <div class="flex items-start p-4 bg-neutral-50 rounded-lg">
+                        <div class="flex items-start p-4 bg-gray-50 rounded-lg">
                             <div class="flex-shrink-0">
-                                <div class="p-2 bg-success rounded-full">
+                                <div class="p-2 bg-green-500 rounded-full">
                                     <i class="fas fa-check text-white text-sm"></i>
                                 </div>
                             </div>
                             <div class="ml-4 flex-1">
-                                <p class="text-sm font-medium text-neutral-900">Surat masuk baru telah diupload</p>
-                                <p class="text-xs text-neutral-500">Dari Dinas Pendidikan</p>
-                                <p class="text-xs text-neutral-400">2 jam yang lalu</p>
+                                <p class="text-sm font-medium text-gray-900">Surat masuk baru telah diupload</p>
+                                <p class="text-xs text-gray-500">Dari Dinas Pendidikan</p>
+                                <p class="text-xs text-gray-400">2 jam yang lalu</p>
                             </div>
                         </div>
                         
-                        <div class="flex items-start p-4 bg-neutral-50 rounded-lg">
+                        <div class="flex items-start p-4 bg-gray-50 rounded-lg">
                             <div class="flex-shrink-0">
-                                <div class="p-2 bg-warning rounded-full">
+                                <div class="p-2 bg-yellow-500 rounded-full">
                                     <i class="fas fa-clock text-white text-sm"></i>
                                 </div>
                             </div>
                             <div class="ml-4 flex-1">
-                                <p class="text-sm font-medium text-neutral-900">Menunggu disposisi</p>
-                                <p class="text-xs text-neutral-500">5 surat menunggu disposisi</p>
-                                <p class="text-xs text-neutral-400">Perlu ditindaklan</p>
+                                <p class="text-sm font-medium text-gray-900">Menunggu disposisi</p>
+                                <p class="text-xs text-gray-500">5 surat menunggu disposisi</p>
+                                <p class="text-xs text-gray-400">Perlu ditindaklan</p>
                             </div>
                         </div>
                         
-                        <div class="flex items-start p-4 bg-neutral-50 rounded-lg">
+                        <div class="flex items-start p-4 bg-gray-50 rounded-lg">
                             <div class="flex-shrink-0">
-                                <div class="p-2 bg-danger rounded-full">
+                                <div class="p-2 bg-red-500 rounded-full">
                                     <i class="fas fa-exclamation-triangle text-white text-sm"></i>
                                 </div>
                             </div>
                             <div class="ml-4 flex-1">
-                                <p class="text-sm font-medium text-neutral-900">Template perlu diperbarui</p>
-                                <p class="text-xs text-neutral-500">3 template perlu update</p>
-                                <p class="text-xs text-neutral-400">Hubungi admin</p>
+                                <p class="text-sm font-medium text-gray-900">Template perlu diperbarui</p>
+                                <p class="text-xs text-gray-500">3 template perlu update</p>
+                                <p class="text-xs text-gray-400">Hubungi admin</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Halaman Buat Surat Keluar -->
+            <!-- Buat Surat Keluar Page -->
             <div x-show="currentPage === 'buat-surat-keluar'" x-cloak class="fade-in">
                 <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-neutral-900">Buat Surat Keluar</h2>
-                    <p class="text-neutral-600">Buat surat keluar dengan template yang tersedia</p>
+                    <h2 class="text-2xl font-bold text-gray-900">Buat Surat Keluar</h2>
+                    <p class="text-gray-600">Buat surat keluar menggunakan template yang tersedia</p>
                 </div>
 
-                <!-- Form dan Preview Container -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <!-- Form Section -->
                     <div class="space-y-6">
                         <!-- Template Selection -->
-                        <div class="bg-white rounded-xl shadow-sm border-neutral-200 p-6">
-                            <h3 class="text-lg font-semibold text-neutral-900 mb-4">Pilih Template Surat</h3>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Template Surat</label>
-                                    <select x-model="suratForm.template" @change="loadTemplate()" 
-                                            class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
-                                        <option value="">-- Pilih Template --</option>
-                                        <option value="undangan">Undangan Rapat</option>
-                                        <option value="pemberitahuan">Pemberitahuan</option>
-                                        <option value="edaran">Edaran</option>
-                                        <option value="pengantar">Surat Pengantar</option>
-                                        <option value="rekomendasi">Surat Rekomendasi</option>
-                                    </select>
-                                </div>
-                            </div>
+                        <div class="bg-white rounded-xl shadow-sm border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Pilih Template Surat</h3>
+                            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="suratForm.template" @change="loadTemplate()">
+                                <option value="">Pilih Template Surat</option>
+                                <option value="undangan">Undangan Rapat</option>
+                                <option value="pemberitahuan">Pemberitahuan</option>
+                                <option value="edaran">Edaran</option>
+                                <option value="pengantar">Surat Pengantar</option>
+                                <option value="rekomendasi">Surat Rekomendasi</option>
+                            </select>
                         </div>
 
                         <!-- Nomor Surat -->
-                        <div class="bg-white rounded-xl shadow-sm border-neutral-200 p-6">
-                            <h3 class="text-lg font-semibold text-neutral-900 mb-4">Nomor Surat</h3>
+                        <div class="bg-white rounded-xl shadow-sm border-gray-200 p-6" x-show="suratForm.template">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Nomor Surat</h3>
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Kode Arsip</label>
-                                    <select x-model="suratForm.kodeArsip" 
-                                            class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
-                                        <option value="">-- Pilih Kode Arsip --</option>
-                                        <option value="400.1.1">400.1.1 - Surat Masuk Umum</option>
-                                        <option value="400.1.2">400.1.2 - Surat Masuk Pribadi</option>
-                                        <option value="410.1.1">410.1.1 - Surat Keluar Umum</option>
-                                        <option value="410.1.2">410.1.2 - Surat Keluar Pribadi</option>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Kode Arsip</label>
+                                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="suratForm.kodeArsip">
+                                        <option value="">Pilih Kode Arsip</option>
+                                        <option value="400.1.1">400.1.1 - Kearsipan Umum</option>
+                                        <option value="400.2.1">400.2.1 - Kearsipan Kepegawaian</option>
+                                        <option value="400.3.1">400.3.1 - Kearsipan Keuangan</option>
+                                        <option value="400.4.1">400.4.1 - Kearsipan Sarana Prasarana</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Nomor Surat</label>
-                                    <div class="flex gap-2">
-                                        <input type="text" x-model="suratForm.noSurat" readonly 
-                                               class="flex-1 px-4 py-2 border border-neutral-300 rounded-lg bg-neutral-50" 
-                                               placeholder="Klik Generate untuk membuat nomor">
-                                        <button @click="generateNomorSurat()" 
-                                                class="btn-primary">
-                                            <i class="fas fa-sync-alt mr-2"></i>
-                                            Generate
-                                        </button>
-                                    </div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Surat</label>
+                                    <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="suratForm.tanggal">
                                 </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Tanggal Surat</label>
-                                    <input type="date" x-model="suratForm.tanggal" 
-                                           class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <div class="flex items-center space-x-2">
+                                    <input type="text" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-gray-50" x-model="suratForm.noSurat" readonly placeholder="Klik Generate untuk membuat nomor">
+                                    <button class="btn-primary" @click="generateNomorSurat()">Generate</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Form Fields Dinamis -->
-                        <div class="bg-white rounded-xl shadow-sm border-neutral-200 p-6" x-show="suratForm.template">
-                            <h3 class="text-lg font-semibold text-neutral-900 mb-4">Isi Surat</h3>
+                        <!-- Form Fields -->
+                        <div class="bg-white rounded-xl shadow-sm border-gray-200 p-6" x-show="suratForm.template">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Detail Surat</h3>
                             <div class="space-y-4">
-                                <!-- Perihal -->
                                 <div>
-                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Perihal</label>
-                                    <input type="text" x-model="suratForm.perihal" 
-                                           class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                           placeholder="Masukkan perihal surat">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Perihal</label>
+                                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="suratForm.perihal" placeholder="Masukkan perihal surat">
                                 </div>
-
-                                <!-- Tujuan -->
                                 <div>
-                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Tujuan</label>
-                                    <input type="text" x-model="suratForm.tujuan" 
-                                           class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                           placeholder="Masukkan tujuan surat">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Tujuan</label>
+                                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="suratForm.tujuan" placeholder="Masukkan tujuan surat">
                                 </div>
-
-                                <!-- Dynamic Fields berdasarkan template -->
+                                
+                                <!-- Dynamic fields for undangan -->
                                 <div x-show="suratForm.template === 'undangan'">
-                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Nama Kegiatan</label>
-                                    <input type="text" x-model="suratForm.namaKegiatan" 
-                                           class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                           placeholder="Masukkan nama kegiatan">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Nama Kegiatan</label>
+                                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="suratForm.namaKegiatan" placeholder="Masukkan nama kegiatan">
                                 </div>
-
                                 <div x-show="suratForm.template === 'undangan'">
-                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Waktu</label>
-                                    <input type="text" x-model="suratForm.waktu" 
-                                           class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                           placeholder="Masukkan waktu kegiatan">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Waktu</label>
+                                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="suratForm.waktu" placeholder="Masukkan waktu kegiatan">
                                 </div>
-
                                 <div x-show="suratForm.template === 'undangan'">
-                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Tempat</label>
-                                    <input type="text" x-model="suratForm.tempat" 
-                                           class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                           placeholder="Masukkan tempat kegiatan">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Tempat</label>
+                                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="suratForm.tempat" placeholder="Masukkan tempat kegiatan">
                                 </div>
-
-                                <!-- Isi Surat -->
+                                
                                 <div>
-                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Isi Surat</label>
-                                    <textarea x-model="suratForm.isi" rows="6" 
-                                              class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                              placeholder="Masukkan isi surat"></textarea>
-                                </div>
-
-                                <!-- Upload File -->
-                                <div>
-                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Upload File Surat (Opsional)</label>
-                                    <input type="file" @change="handleFileUpload($event)" 
-                                           class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                                           accept=".pdf,.doc,.docx">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Isi Surat</label>
+                                    <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="suratForm.isi" rows="6" placeholder="Masukkan isi surat"></textarea>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Action Buttons -->
-                        <div class="flex gap-4">
-                            <button @click="saveSurat()" class="btn-primary">
-                                <i class="fas fa-save mr-2"></i>
-                                Simpan ke Agenda
-                            </button>
-                            <button @click="printSurat()" class="btn-secondary" x-show="suratForm.noSurat">
-                                <i class="fas fa-print mr-2"></i>
-                                Cetak Surat
-                            </button>
+                        <!-- Actions -->
+                        <div class="bg-white rounded-xl shadow-sm border-gray-200 p-6" x-show="suratForm.template">
+                            <div class="flex space-x-4">
+                                <button class="btn-primary" @click="saveSurat()">
+                                    <i class="fas fa-save mr-2"></i>Simpan ke Agenda
+                                </button>
+                                <button class="btn-secondary" @click="printSurat()" x-show="suratForm.noSurat">
+                                    <i class="fas fa-print mr-2"></i>Cetak Surat
+                                </button>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Preview Section -->
-                    <div class="lg:sticky lg:top-24">
-                        <div class="bg-white rounded-xl shadow-sm border-neutral-200 p-6">
-                            <h3 class="text-lg font-semibold text-neutral-900 mb-4">Preview Surat</h3>
-                            <div id="suratPreview" class="border border-neutral-200 rounded-lg p-6 min-h-[600px] bg-white">
-                                <div x-show="!suratForm.template" class="text-center text-neutral-500 py-12">
-                                    <i class="fas fa-file-alt text-4xl mb-4"></i>
-                                    <p>Pilih template untuk melihat preview</p>
+                    <div class="lg:sticky lg:top-24 h-fit">
+                        <div class="bg-white rounded-xl shadow-sm border-gray-200 p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Preview Surat</h3>
+                            
+                            <div x-show="!suratForm.template" class="text-center text-gray-500 py-12">
+                                <i class="fas fa-file-alt text-4xl mb-4"></i>
+                                <p>Pilih template untuk melihat preview</p>
+                            </div>
+                            
+                            <div x-show="suratForm.template" class="space-y-4">
+                                <!-- Header -->
+                                <div class="text-center border-b border-gray-200 pb-4">
+                                    <h4 class="text-lg font-bold">SDN 005 TANJUNGPANDAN</h4>
+                                    <p class="text-sm text-gray-600">Jl. Pendidikan No. 123 Tanjungpandan</p>
+                                    <p class="text-sm text-gray-600">Telp: (0719) 123456</p>
                                 </div>
-                                <div x-show="suratForm.template" class="space-y-4">
-                                    <!-- Kop Surat -->
-                                    <div class="text-center border-b-2 border-neutral-800 pb-4">
-                                        <h4 class="text-lg font-bold">SDN 005 TANJUNG PANDAN</h4>
-                                        <p class="text-sm text-neutral-600">Jl. Pendidikan No. 123 Tanjung Pandan</p>
-                                        <p class="text-sm text-neutral-600">Telp: (0719) 123456 | Email: sdn005@sch.id</p>
+                                
+                                <!-- Nomor dan Tanggal -->
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="text-sm"><strong>Nomor:</strong> <span x-text="suratForm.noSurat || '...'"></span></p>
+                                        <p class="text-sm"><strong>Tanggal:</strong> <span x-text="suratForm.tanggal || '...'"></span></p>
                                     </div>
-
-                                    <!-- Nomor dan Tanggal -->
-                                    <div class="flex justify-between text-sm">
-                                        <div>Nomor: <span x-text="suratForm.noSurat || '...'"></span></div>
-                                        <div>Tanggal: <span x-text="suratForm.tanggal || '...'"></span></div>
-                                    </div>
-
-                                    <!-- Perihal -->
-                                    <div class="text-center font-bold">
-                                        <p x-text="suratForm.perihal || 'Perihal'"></p>
-                                    </div>
-
-                                    <!-- Isi Surat -->
-                                    <div class="space-y-4">
-                                        <div x-show="suratForm.tujuan">
-                                            <p>Kepada Yth:</p>
-                                            <p x-text="suratForm.tujuan" class="font-semibold"></p>
-                                        </div>
-                                        <div x-html="suratForm.isi ? suratForm.isi.replace(/\n/g, '<br>') : 'Isi surat akan muncul di sini...'"></div>
-                                    </div>
-
-                                    <!-- Penutup -->
-                                    <div class="text-right space-y-2">
-                                        <p>Demikian surat ini dibuat, atas perhatian kami ucapkan terima kasih.</p>
-                                        <div class="mt-8">
-                                            <p>Hormat kami,</p>
-                                            <br><br><br>
-                                            <p>Kepala Sekolah</p>
-                                            <div class="border-b-2 border-black w-32"></div>
-                                            <p class="font-semibold">Drs. BUDI SANTOSO, M.Pd.</p>
-                                            <p class="text-sm">NIP. 19750101 200001 1 001</p>
+                                </div>
+                                
+                                <!-- Perihal -->
+                                <div>
+                                    <p class="text-sm"><strong>Perihal:</strong> <span x-text="suratForm.perihal || 'Perihal'"></span></p>
+                                </div>
+                                
+                                <!-- Tujuan -->
+                                <div x-show="suratForm.tujuan">
+                                    <p class="text-sm"><strong>Kepada:</strong></p>
+                                    <p class="font-semibold" x-text="suratForm.tujuan"></p>
+                                </div>
+                                
+                                <!-- Isi Surat -->
+                                <div class="border-t border-gray-200 pt-4">
+                                    <div x-html="suratForm.isi ? suratForm.isi.replace(/\n/g, '<br>') : 'Isi surat akan muncul di sini...'" class="text-sm"></div>
+                                </div>
+                                
+                                <!-- Footer -->
+                                <div class="border-t border-gray-200 pt-4 mt-8">
+                                    <div class="flex justify-between">
+                                        <div></div>
+                                        <div class="text-center">
+                                            <p class="text-sm mb-4">Hormat Kami,</p>
+                                            <p class="text-sm mb-2">Kepala Sekolah</p>
+                                            <div class="h-12 border-b border-gray-400"></div>
+                                            <p class="text-sm font-semibold">Dr. Siti Nurjanah, S.Pd., M.Pd.</p>
+                                            <p class="text-xs text-gray-600">NIP. 19750123 200001 1 001</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Placeholder untuk halaman lain -->
+            <div x-show="currentPage !== 'dashboard' && currentPage !== 'buat-surat-keluar'" x-cloak class="fade-in">
+                <div class="bg-white rounded-xl shadow-sm border-gray-200 p-8 text-center">
+                    <i class="fas fa-tools text-6xl text-gray-400 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Halaman Sedang Dikembangkan</h3>
+                    <p class="text-gray-600 mb-4">Halaman <span x-text="currentPage" class="font-mono bg-gray-100 px-2 py-1 rounded"></span> sedang dalam pengembangan</p>
+                    <button @click="currentPage = 'dashboard'" class="btn-primary">
+                        <i class="fas fa-arrow-left mr-2"></i>Kembali ke Dashboard
+                    </button>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Overlay for mobile sidebar -->
-    <div x-show="sidebarOpen" @click="sidebarOpen = false" x-cloak
-         x-transition:enter="transition-opacity ease-linear duration-300"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         x-transition:leave="transition-opacity ease-linear duration-300"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0"
-         class="fixed inset-0 bg-gray-600 bg-opacity-75 z-40 lg:hidden"></div>
+    <!-- Notification -->
+    <div x-show="notification.show" x-cloak
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 transform translate-y-2"
+         x-transition:enter-end="opacity-100 transform translate-y-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 transform translate-y-0"
+         x-transition:leave-end="opacity-0 transform translate-y-2"
+         class="fixed top-20 right-4 z-50 max-w-sm">
+        <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-4">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <i :class="notification.type === 'success' ? 'fas fa-check-circle text-green-500' : 'fas fa-exclamation-circle text-red-500'" class="text-xl"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900" x-text="notification.title"></p>
+                    <p class="text-sm text-gray-500" x-text="notification.message"></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
-        function logout() {
-            if (confirm('Apakah Anda yakin ingin keluar?')) {
-                window.location.href = 'login.html';
-            }
-        }
-
-        // Alpine.js App
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('app', () => ({
+        function sistemKearsipan() {
+            return {
                 sidebarOpen: false,
                 currentPage: 'dashboard',
-                userRole: 'admin', // Ganti dengan role dari session
-                userName: 'Admin User', // Ganti dengan nama dari session
-                
-                // Surat Form Data
+                userRole: 'admin',
+                loading: false,
+                notification: {
+                    show: false,
+                    type: 'success',
+                    title: '',
+                    message: ''
+                },
                 suratForm: {
                     template: '',
                     kodeArsip: '',
                     noSurat: '',
-                    tanggal: new Date().toISOString().split('T')[0],
+                    tanggal: '',
                     perihal: '',
                     tujuan: '',
                     namaKegiatan: '',
                     waktu: '',
                     tempat: '',
-                    isi: '',
-                    file: null
+                    isi: ''
                 },
-                
-                // Menu Items
-                menuItems: [
+                suratTemplates: [
                     {
-                        id: 'dashboard',
-                        name: 'Dashboard',
-                        icon: 'fas fa-tachometer-alt',
-                        submenu: [
-                            { id: 'dashboard-quick', name: 'Quick Akses', icon: 'fas fa-bolt' }
-                        ]
+                        id: 'undangan',
+                        name: 'Undangan Rapat',
+                        perihal: 'Undangan Rapat',
+                        content: 'Dengan hormat,\n\nBersama ini kami mengundang Bapak/Ibu untuk menghadiri rapat:\n\nKegiatan: {{nama_kegiatan}}\nHari/Tanggal: {{tanggal}}\nWaktu: {{waktu}}\nTempat: {{tempat}}\n\nDemikian undangan ini kami sampaikan, atas perhatian dan kehadirannya kami ucapkan terima kasih.'
                     },
                     {
-                        id: 'buat-surat',
-                        name: 'Buat Surat',
-                        icon: 'fas fa-plus-circle',
-                        submenu: [
-                            { id: 'buat-surat-keluar', name: 'Buat Surat Keluar', icon: 'fas fa-file-alt', description: 'Menggunakan template surat' }
-                        ],
-                        roles: ['admin', 'user']
+                        id: 'pemberitahuan',
+                        name: 'Pemberitahuan',
+                        perihal: 'Pemberitahuan',
+                        content: 'Dengan hormat,\n\nSehubungan dengan {{kegiatan}}, kami memberitahukan kepada seluruh pihak terkait bahwa:\n\n{{isi_pemberitahuan}}\n\nDemikian pemberitahuan ini kami sampaikan, untuk menjadi perhatian dan dilaksanakan sebagaimana mestinya.'
                     },
                     {
-                        id: 'agenda-surat',
-                        name: 'Agenda Surat',
-                        icon: 'fas fa-clipboard-list',
-                        submenu: [
-                            { id: 'agenda-masuk-upload', name: 'Upload berkas surat masuk', icon: 'fas fa-upload' },
-                            { id: 'agenda-masuk-disposisi', name: 'Disposisi surat', icon: 'fas fa-signature', roles: ['admin', 'pimpinan'] },
-                            { id: 'agenda-masuk-daftar', name: 'Daftar Surat Masuk', icon: 'fas fa-list' },
-                            { id: 'agenda-keluar-upload', name: 'Upload berkas surat keluar', icon: 'fas fa-upload' },
-                            { id: 'agenda-keluar-daftar', name: 'Daftar Surat Keluar', icon: 'fas fa-list' }
-                        ]
+                        id: 'edaran',
+                        name: 'Edaran',
+                        perihal: 'Edaran',
+                        content: 'Dengan hormat,\n\nBerdasarkan {{dasar_edaran}}, kami mengedarkan hal-hal sebagai berikut:\n\n{{isi_edaran}}\n\nEdaran ini ditujukan untuk {{tujuan_edaran}} dan agar dapat dilaksanakan dengan penuh tanggung jawab.'
                     },
                     {
-                        id: 'arsip',
-                        name: 'Arsip',
-                        icon: 'fas fa-archive',
-                        submenu: [
-                            { id: 'arsip-register', name: 'Register Arsip', icon: 'fas fa-plus-square' },
-                            { id: 'arsip-daftar', name: 'Daftar Arsip', icon: 'fas fa-folder-open' }
-                        ]
+                        id: 'pengantar',
+                        name: 'Surat Pengantar',
+                        perihal: 'Surat Pengantar',
+                        content: 'Dengan hormat,\n\nBersama ini kami kirimkan {{dokumen}} sebagai kelengkapan persyaratan {{keperluan}}.\n\nDemikian surat pengantar ini kami buat, untuk dapat dipergunakan sebagaimana mestinya.'
                     },
                     {
-                        id: 'tentang',
-                        name: 'Tentang Aplikasi',
-                        icon: 'fas fa-info-circle',
-                        submenu: [
-                            { id: 'tentang-info', name: 'Info Penggunaan', icon: 'fas fa-question-circle' },
-                            { id: 'tentang-feedback', name: 'Feedback / Kontak / Masukan', icon: 'fas fa-comment-dots' },
-                            { id: 'logout', name: 'Logout', icon: 'fas fa-sign-out-alt' }
-                        ]
+                        id: 'rekomendasi',
+                        name: 'Surat Rekomendasi',
+                        perihal: 'Surat Rekomendasi',
+                        content: 'Dengan hormat,\n\nBerdasarkan hasil penilaian dan pertimbangan, kami merekomendasikan:\n\n{{isi_rekomendasi}}\n\nRekomendasi ini diberikan untuk {{tujuan_rekomendasi}} dan berlaku selama {{masa_berlaku}}.'
                     }
                 ],
+                kodeArsipOptions: [
+                    { value: '400.1.1', label: '400.1.1 - Kearsipan Umum' },
+                    { value: '400.2.1', label: '400.2.1 - Kearsipan Kepegawaian' },
+                    { value: '400.3.1', label: '400.3.1 - Kearsipan Keuangan' },
+                    { value: '400.4.1', label: '400.4.1 - Kearsipan Sarana Prasarana' }
+                ],
                 
-                // Navigation
-                navigate(page) {
-                    this.currentPage = page;
-                    this.sidebarOpen = false;
+                init() {
+                    // Set default date
+                    this.suratForm.tanggal = new Date().toISOString().split('T')[0];
                 },
                 
-                // Check if user has role
-                hasRole(role) {
-                    return this.userRole === role;
-                },
-                
-                // Check if user can access menu
-                canAccess(menu) {
-                    if (!menu.roles) return true;
-                    return menu.roles.includes(this.userRole);
-                },
-                
-                // Load Template
                 loadTemplate() {
-                    // Reset form saat ganti template
-                    this.suratForm.perihal = '';
-                    this.suratForm.isi = '';
+                    if (!this.suratForm.template) return;
                     
-                    // Load template content based on selection
-                    const templates = {
-                        'undangan': {
-                            perihal: 'Undangan',
-                            isi: 'Bersama ini kami mengundang Bapak/Ibu untuk menghadiri {{nama_kegiatan}} yang akan diselenggarakan pada:\n\nHari/Tanggal: {{tanggal}}\nPukul: {{waktu}}\nTempat: {{tempat}}\n\nDemikian undangan ini kami sampaikan, atas perhatian dan kehadiran Bapak/Ibu kami ucapkan terima kasih.'
-                        },
-                        'pemberitahuan': {
-                            perihal: 'Pemberitahuan',
-                            isi: 'Sehubungan dengan {{perihal}}, bersama ini kami sampaikan bahwa:\n\n{{isi}}\n\nDemikian pemberitahuan ini kami sampaikan untuk menjadi perhatian bersama.'
-                        },
-                        'edaran': {
-                            perihal: 'Edaran',
-                            isi: 'Dalam rangka {{perihal}}, dengan ini kami edarkan kepada seluruh warga sekolah untuk:\n\n{{isi}}\n\nEdaran ini berlaku sejak tanggal ditetapkan.'
-                        },
-                        'pengantar': {
-                            perihal: 'Surat Pengantar',
-                            isi: 'Bersama ini kami menerangkan bahwa:\n\n{{isi}}\n\nDemikian surat pengantar ini kami buat untuk dapat dipergunakan sebagaimana mestinya.'
-                        },
-                        'rekomendasi': {
-                            perihal: 'Surat Rekomendasi',
-                            isi: 'Berdasarkan {{perihal}}, dengan ini kami merekomendasikan:\n\n{{isi}}\n\nSurat rekomendasi ini dibuat berdasarkan pertimbangan dan kebutuhan yang bersangkutan.'
-                        }
-                    };
-                    
-                    if (templates[this.suratForm.template]) {
-                        this.suratForm.perihal = templates[this.suratForm.template].perihal;
-                        this.suratForm.isi = templates[this.suratForm.template].isi;
+                    const template = this.suratTemplates.find(t => t.id === this.suratForm.template);
+                    if (template) {
+                        this.suratForm.perihal = template.perihal;
+                        this.suratForm.isi = template.content;
                     }
                 },
                 
-                // Generate Nomor Surat
                 async generateNomorSurat() {
                     if (!this.suratForm.kodeArsip || !this.suratForm.tanggal) {
-                        alert('Silakan pilih kode arsip dan tanggal terlebih dahulu');
+                        this.showNotification('error', 'Error', 'Silakan pilih kode arsip dan tanggal terlebih dahulu');
                         return;
                     }
                     
+                    this.loading = true;
+                    
                     try {
-                        // Simulasi generate nomor surat
-                        const date = new Date(this.suratForm.tanggal);
-                        const year = date.getFullYear();
-                        const month = date.getMonth() + 1;
-                        const romanMonths = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-                        const romanMonth = romanMonths[month - 1];
+                        // Simulate API call
+                        await new Promise(resolve => setTimeout(resolve, 1000));
                         
-                        // Generate random 3-digit number (dalam real implementation, ini dari backend)
-                        const nomorUrut = String(Math.floor(Math.random() * 999) + 1).padStart(3, '0');
+                        const bulanRomawi = this.getBulanRomawi(new Date(this.suratForm.tanggal).getMonth() + 1);
+                        const tahun = new Date(this.suratForm.tanggal).getFullYear();
+                        const nomorUrut = Math.floor(Math.random() * 999) + 1;
                         
-                        this.suratForm.noSurat = `${this.suratForm.kodeArsip}/${nomorUrut}/SDN.005.TPTM/${romanMonth}/${year}`;
+                        this.suratForm.noSurat = `${this.suratForm.kodeArsip}/${nomorUrut.toString().padStart(3, '0')}/SDN.005.TPTM/${bulanRomawi}/${tahun}`;
                         
-                        // Show success notification
-                        this.showNotification('Nomor surat berhasil digenerate', 'success');
-                        
+                        this.showNotification('success', 'Berhasil', 'Nomor surat berhasil dibuat');
                     } catch (error) {
-                        console.error('Error generating nomor surat:', error);
-                        alert('Gagal generate nomor surat. Silakan coba lagi.');
+                        this.showNotification('error', 'Error', 'Gagal membuat nomor surat');
+                    } finally {
+                        this.loading = false;
                     }
                 },
                 
-                // Handle File Upload
-                handleFileUpload(event) {
-                    const file = event.target.files[0];
-                    if (file) {
-                        this.suratForm.file = file;
-                        this.showNotification('File berhasil diupload', 'success');
-                    }
-                },
-                
-                // Save Surat
                 async saveSurat() {
-                    if (!this.suratForm.template || !this.suratForm.noSurat || !this.suratForm.perihal) {
-                        alert('Silakan lengkapi semua field yang required');
+                    if (!this.suratForm.noSurat || !this.suratForm.perihal || !this.suratForm.tujuan) {
+                        this.showNotification('error', 'Error', 'Silakan lengkapi semua field yang required');
                         return;
                     }
                     
+                    this.loading = true;
+                    
                     try {
-                        // Simulasi save to backend
-                        const suratData = {
-                            ...this.suratForm,
-                            createdBy: this.userName,
-                            createdAt: new Date().toISOString()
-                        };
+                        // Simulate API call
+                        await new Promise(resolve => setTimeout(resolve, 1000));
                         
-                        // In real implementation, call API here
-                        // await this.apiCall('createSuratKeluar', suratData);
-                        
-                        console.log('Saving surat:', suratData);
-                        
-                        // Show success notification
-                        this.showNotification('Surat berhasil disimpan ke agenda', 'success');
+                        this.showNotification('success', 'Berhasil', 'Surat berhasil disimpan ke agenda');
                         
                         // Reset form
                         this.resetForm();
-                        
                     } catch (error) {
-                        console.error('Error saving surat:', error);
-                        alert('Gagal menyimpan surat. Silakan coba lagi.');
+                        this.showNotification('error', 'Error', 'Gagal menyimpan surat');
+                    } finally {
+                        this.loading = false;
                     }
                 },
                 
-                // Print Surat
                 printSurat() {
                     if (!this.suratForm.noSurat) {
-                        alert('Generate nomor surat terlebih dahulu');
+                        this.showNotification('error', 'Error', 'Silakan buat nomor surat terlebih dahulu');
                         return;
                     }
                     
-                    // Open print dialog
                     window.print();
                 },
                 
-                // Reset Form
                 resetForm() {
                     this.suratForm = {
                         template: '',
@@ -1146,52 +994,35 @@
                         namaKegiatan: '',
                         waktu: '',
                         tempat: '',
-                        isi: '',
-                        file: null
+                        isi: ''
                     };
                 },
                 
-                // Show Notification
-                showNotification(message, type = 'info') {
-                    // Create notification element
-                    const notification = document.createElement('div');
-                    notification.className = `fixed top-20 right-4 z-50 p-4 rounded-lg shadow-lg transform transition-all duration-300 ${
-                        type === 'success' ? 'bg-green-500 text-white' : 
-                        type === 'error' ? 'bg-red-500 text-white' : 
-                        'bg-blue-500 text-white'
-                    }`;
-                    notification.innerHTML = `
-                        <div class="flex items-center">
-                            <i class="fas ${
-                                type === 'success' ? 'fa-check-circle' : 
-                                type === 'error' ? 'fa-exclamation-circle' : 
-                                'fa-info-circle'
-                            } mr-2"></i>
-                            <span>${message}</span>
-                        </div>
-                    `;
+                showNotification(type, title, message) {
+                    this.notification = {
+                        show: true,
+                        type: type,
+                        title: title,
+                        message: message
+                    };
                     
-                    document.body.appendChild(notification);
-                    
-                    // Remove after 3 seconds
                     setTimeout(() => {
-                        notification.remove();
+                        this.notification.show = false;
                     }, 3000);
                 },
                 
-                // API Call (placeholder for real implementation)
-                async apiCall(method, data = null) {
-                    // In real implementation, this would call your Google Apps Script backend
-                    console.log(`API Call: ${method}`, data);
-                    
-                    // Simulate API delay
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    
-                    // Return mock response
-                    return { success: true, data: null };
+                getBulanRomawi(bulan) {
+                    const romawi = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+                    return romawan[bulan - 1];
+                },
+                
+                logout() {
+                    if (confirm('Apakah Anda yakin ingin keluar?')) {
+                        window.location.href = 'login.html';
+                    }
                 }
-            }));
-        });
+            }
+        }
     </script>
 </body>
 </html>
