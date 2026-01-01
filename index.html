@@ -711,16 +711,198 @@
                 </div>
             </div>
 
-            <!-- Placeholder untuk halaman lain -->
-            <div x-show="currentPage !== 'dashboard'" x-cloak class="fade-in">
-                <div class="bg-white rounded-xl shadow-sm border-neutral-200 p-8 text-center">
-                    <i class="fas fa-tools text-6xl text-gray-400 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-neutral-900 mb-4">Halaman Sedang Dikembangkan</h3>
-                    <p class="text-neutral-600 mb-4">Halaman <span x-text="currentPage" class="font-mono bg-gray-100 px-2 py-1 rounded"></span> sedang dalam pengembangan</p>
-                    <button @click="currentPage = 'dashboard'" class="btn-primary">
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        Kembali ke Dashboard
-                    </button>
+            <!-- Halaman Buat Surat Keluar -->
+            <div x-show="currentPage === 'buat-surat-keluar'" x-cloak class="fade-in">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-neutral-900">Buat Surat Keluar</h2>
+                    <p class="text-neutral-600">Buat surat keluar dengan template yang tersedia</p>
+                </div>
+
+                <!-- Form dan Preview Container -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Form Section -->
+                    <div class="space-y-6">
+                        <!-- Template Selection -->
+                        <div class="bg-white rounded-xl shadow-sm border-neutral-200 p-6">
+                            <h3 class="text-lg font-semibold text-neutral-900 mb-4">Pilih Template Surat</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Template Surat</label>
+                                    <select x-model="suratForm.template" @change="loadTemplate()" 
+                                            class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="">-- Pilih Template --</option>
+                                        <option value="undangan">Undangan Rapat</option>
+                                        <option value="pemberitahuan">Pemberitahuan</option>
+                                        <option value="edaran">Edaran</option>
+                                        <option value="pengantar">Surat Pengantar</option>
+                                        <option value="rekomendasi">Surat Rekomendasi</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nomor Surat -->
+                        <div class="bg-white rounded-xl shadow-sm border-neutral-200 p-6">
+                            <h3 class="text-lg font-semibold text-neutral-900 mb-4">Nomor Surat</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Kode Arsip</label>
+                                    <select x-model="suratForm.kodeArsip" 
+                                            class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                                        <option value="">-- Pilih Kode Arsip --</option>
+                                        <option value="400.1.1">400.1.1 - Surat Masuk Umum</option>
+                                        <option value="400.1.2">400.1.2 - Surat Masuk Pribadi</option>
+                                        <option value="410.1.1">410.1.1 - Surat Keluar Umum</option>
+                                        <option value="410.1.2">410.1.2 - Surat Keluar Pribadi</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Nomor Surat</label>
+                                    <div class="flex gap-2">
+                                        <input type="text" x-model="suratForm.noSurat" readonly 
+                                               class="flex-1 px-4 py-2 border border-neutral-300 rounded-lg bg-neutral-50" 
+                                               placeholder="Klik Generate untuk membuat nomor">
+                                        <button @click="generateNomorSurat()" 
+                                                class="btn-primary">
+                                            <i class="fas fa-sync-alt mr-2"></i>
+                                            Generate
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Tanggal Surat</label>
+                                    <input type="date" x-model="suratForm.tanggal" 
+                                           class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Fields Dinamis -->
+                        <div class="bg-white rounded-xl shadow-sm border-neutral-200 p-6" x-show="suratForm.template">
+                            <h3 class="text-lg font-semibold text-neutral-900 mb-4">Isi Surat</h3>
+                            <div class="space-y-4">
+                                <!-- Perihal -->
+                                <div>
+                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Perihal</label>
+                                    <input type="text" x-model="suratForm.perihal" 
+                                           class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                           placeholder="Masukkan perihal surat">
+                                </div>
+
+                                <!-- Tujuan -->
+                                <div>
+                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Tujuan</label>
+                                    <input type="text" x-model="suratForm.tujuan" 
+                                           class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                           placeholder="Masukkan tujuan surat">
+                                </div>
+
+                                <!-- Dynamic Fields berdasarkan template -->
+                                <div x-show="suratForm.template === 'undangan'">
+                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Nama Kegiatan</label>
+                                    <input type="text" x-model="suratForm.namaKegiatan" 
+                                           class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                           placeholder="Masukkan nama kegiatan">
+                                </div>
+
+                                <div x-show="suratForm.template === 'undangan'">
+                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Waktu</label>
+                                    <input type="text" x-model="suratForm.waktu" 
+                                           class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                           placeholder="Masukkan waktu kegiatan">
+                                </div>
+
+                                <div x-show="suratForm.template === 'undangan'">
+                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Tempat</label>
+                                    <input type="text" x-model="suratForm.tempat" 
+                                           class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                           placeholder="Masukkan tempat kegiatan">
+                                </div>
+
+                                <!-- Isi Surat -->
+                                <div>
+                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Isi Surat</label>
+                                    <textarea x-model="suratForm.isi" rows="6" 
+                                              class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                              placeholder="Masukkan isi surat"></textarea>
+                                </div>
+
+                                <!-- Upload File -->
+                                <div>
+                                    <label class="block text-sm font-medium text-neutral-700 mb-2">Upload File Surat (Opsional)</label>
+                                    <input type="file" @change="handleFileUpload($event)" 
+                                           class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                           accept=".pdf,.doc,.docx">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-4">
+                            <button @click="saveSurat()" class="btn-primary">
+                                <i class="fas fa-save mr-2"></i>
+                                Simpan ke Agenda
+                            </button>
+                            <button @click="printSurat()" class="btn-secondary" x-show="suratForm.noSurat">
+                                <i class="fas fa-print mr-2"></i>
+                                Cetak Surat
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Preview Section -->
+                    <div class="lg:sticky lg:top-24">
+                        <div class="bg-white rounded-xl shadow-sm border-neutral-200 p-6">
+                            <h3 class="text-lg font-semibold text-neutral-900 mb-4">Preview Surat</h3>
+                            <div id="suratPreview" class="border border-neutral-200 rounded-lg p-6 min-h-[600px] bg-white">
+                                <div x-show="!suratForm.template" class="text-center text-neutral-500 py-12">
+                                    <i class="fas fa-file-alt text-4xl mb-4"></i>
+                                    <p>Pilih template untuk melihat preview</p>
+                                </div>
+                                <div x-show="suratForm.template" class="space-y-4">
+                                    <!-- Kop Surat -->
+                                    <div class="text-center border-b-2 border-neutral-800 pb-4">
+                                        <h4 class="text-lg font-bold">SDN 005 TANJUNG PANDAN</h4>
+                                        <p class="text-sm text-neutral-600">Jl. Pendidikan No. 123 Tanjung Pandan</p>
+                                        <p class="text-sm text-neutral-600">Telp: (0719) 123456 | Email: sdn005@sch.id</p>
+                                    </div>
+
+                                    <!-- Nomor dan Tanggal -->
+                                    <div class="flex justify-between text-sm">
+                                        <div>Nomor: <span x-text="suratForm.noSurat || '...'"></span></div>
+                                        <div>Tanggal: <span x-text="suratForm.tanggal || '...'"></span></div>
+                                    </div>
+
+                                    <!-- Perihal -->
+                                    <div class="text-center font-bold">
+                                        <p x-text="suratForm.perihal || 'Perihal'"></p>
+                                    </div>
+
+                                    <!-- Isi Surat -->
+                                    <div class="space-y-4">
+                                        <div x-show="suratForm.tujuan">
+                                            <p>Kepada Yth:</p>
+                                            <p x-text="suratForm.tujuan" class="font-semibold"></p>
+                                        </div>
+                                        <div x-html="suratForm.isi ? suratForm.isi.replace(/\n/g, '<br>') : 'Isi surat akan muncul di sini...'"></div>
+                                    </div>
+
+                                    <!-- Penutup -->
+                                    <div class="text-right space-y-2">
+                                        <p>Demikian surat ini dibuat, atas perhatian kami ucapkan terima kasih.</p>
+                                        <div class="mt-8">
+                                            <p>Hormat kami,</p>
+                                            <br><br><br>
+                                            <p>Kepala Sekolah</p>
+                                            <div class="border-b-2 border-black w-32"></div>
+                                            <p class="font-semibold">Drs. BUDI SANTOSO, M.Pd.</p>
+                                            <p class="text-sm">NIP. 19750101 200001 1 001</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -742,6 +924,274 @@
                 window.location.href = 'login.html';
             }
         }
+
+        // Alpine.js App
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('app', () => ({
+                sidebarOpen: false,
+                currentPage: 'dashboard',
+                userRole: 'admin', // Ganti dengan role dari session
+                userName: 'Admin User', // Ganti dengan nama dari session
+                
+                // Surat Form Data
+                suratForm: {
+                    template: '',
+                    kodeArsip: '',
+                    noSurat: '',
+                    tanggal: new Date().toISOString().split('T')[0],
+                    perihal: '',
+                    tujuan: '',
+                    namaKegiatan: '',
+                    waktu: '',
+                    tempat: '',
+                    isi: '',
+                    file: null
+                },
+                
+                // Menu Items
+                menuItems: [
+                    {
+                        id: 'dashboard',
+                        name: 'Dashboard',
+                        icon: 'fas fa-tachometer-alt',
+                        submenu: [
+                            { id: 'dashboard-quick', name: 'Quick Akses', icon: 'fas fa-bolt' }
+                        ]
+                    },
+                    {
+                        id: 'buat-surat',
+                        name: 'Buat Surat',
+                        icon: 'fas fa-plus-circle',
+                        submenu: [
+                            { id: 'buat-surat-keluar', name: 'Buat Surat Keluar', icon: 'fas fa-file-alt', description: 'Menggunakan template surat' }
+                        ],
+                        roles: ['admin', 'user']
+                    },
+                    {
+                        id: 'agenda-surat',
+                        name: 'Agenda Surat',
+                        icon: 'fas fa-clipboard-list',
+                        submenu: [
+                            { id: 'agenda-masuk-upload', name: 'Upload berkas surat masuk', icon: 'fas fa-upload' },
+                            { id: 'agenda-masuk-disposisi', name: 'Disposisi surat', icon: 'fas fa-signature', roles: ['admin', 'pimpinan'] },
+                            { id: 'agenda-masuk-daftar', name: 'Daftar Surat Masuk', icon: 'fas fa-list' },
+                            { id: 'agenda-keluar-upload', name: 'Upload berkas surat keluar', icon: 'fas fa-upload' },
+                            { id: 'agenda-keluar-daftar', name: 'Daftar Surat Keluar', icon: 'fas fa-list' }
+                        ]
+                    },
+                    {
+                        id: 'arsip',
+                        name: 'Arsip',
+                        icon: 'fas fa-archive',
+                        submenu: [
+                            { id: 'arsip-register', name: 'Register Arsip', icon: 'fas fa-plus-square' },
+                            { id: 'arsip-daftar', name: 'Daftar Arsip', icon: 'fas fa-folder-open' }
+                        ]
+                    },
+                    {
+                        id: 'tentang',
+                        name: 'Tentang Aplikasi',
+                        icon: 'fas fa-info-circle',
+                        submenu: [
+                            { id: 'tentang-info', name: 'Info Penggunaan', icon: 'fas fa-question-circle' },
+                            { id: 'tentang-feedback', name: 'Feedback / Kontak / Masukan', icon: 'fas fa-comment-dots' },
+                            { id: 'logout', name: 'Logout', icon: 'fas fa-sign-out-alt' }
+                        ]
+                    }
+                ],
+                
+                // Navigation
+                navigate(page) {
+                    this.currentPage = page;
+                    this.sidebarOpen = false;
+                },
+                
+                // Check if user has role
+                hasRole(role) {
+                    return this.userRole === role;
+                },
+                
+                // Check if user can access menu
+                canAccess(menu) {
+                    if (!menu.roles) return true;
+                    return menu.roles.includes(this.userRole);
+                },
+                
+                // Load Template
+                loadTemplate() {
+                    // Reset form saat ganti template
+                    this.suratForm.perihal = '';
+                    this.suratForm.isi = '';
+                    
+                    // Load template content based on selection
+                    const templates = {
+                        'undangan': {
+                            perihal: 'Undangan',
+                            isi: 'Bersama ini kami mengundang Bapak/Ibu untuk menghadiri {{nama_kegiatan}} yang akan diselenggarakan pada:\n\nHari/Tanggal: {{tanggal}}\nPukul: {{waktu}}\nTempat: {{tempat}}\n\nDemikian undangan ini kami sampaikan, atas perhatian dan kehadiran Bapak/Ibu kami ucapkan terima kasih.'
+                        },
+                        'pemberitahuan': {
+                            perihal: 'Pemberitahuan',
+                            isi: 'Sehubungan dengan {{perihal}}, bersama ini kami sampaikan bahwa:\n\n{{isi}}\n\nDemikian pemberitahuan ini kami sampaikan untuk menjadi perhatian bersama.'
+                        },
+                        'edaran': {
+                            perihal: 'Edaran',
+                            isi: 'Dalam rangka {{perihal}}, dengan ini kami edarkan kepada seluruh warga sekolah untuk:\n\n{{isi}}\n\nEdaran ini berlaku sejak tanggal ditetapkan.'
+                        },
+                        'pengantar': {
+                            perihal: 'Surat Pengantar',
+                            isi: 'Bersama ini kami menerangkan bahwa:\n\n{{isi}}\n\nDemikian surat pengantar ini kami buat untuk dapat dipergunakan sebagaimana mestinya.'
+                        },
+                        'rekomendasi': {
+                            perihal: 'Surat Rekomendasi',
+                            isi: 'Berdasarkan {{perihal}}, dengan ini kami merekomendasikan:\n\n{{isi}}\n\nSurat rekomendasi ini dibuat berdasarkan pertimbangan dan kebutuhan yang bersangkutan.'
+                        }
+                    };
+                    
+                    if (templates[this.suratForm.template]) {
+                        this.suratForm.perihal = templates[this.suratForm.template].perihal;
+                        this.suratForm.isi = templates[this.suratForm.template].isi;
+                    }
+                },
+                
+                // Generate Nomor Surat
+                async generateNomorSurat() {
+                    if (!this.suratForm.kodeArsip || !this.suratForm.tanggal) {
+                        alert('Silakan pilih kode arsip dan tanggal terlebih dahulu');
+                        return;
+                    }
+                    
+                    try {
+                        // Simulasi generate nomor surat
+                        const date = new Date(this.suratForm.tanggal);
+                        const year = date.getFullYear();
+                        const month = date.getMonth() + 1;
+                        const romanMonths = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+                        const romanMonth = romanMonths[month - 1];
+                        
+                        // Generate random 3-digit number (dalam real implementation, ini dari backend)
+                        const nomorUrut = String(Math.floor(Math.random() * 999) + 1).padStart(3, '0');
+                        
+                        this.suratForm.noSurat = `${this.suratForm.kodeArsip}/${nomorUrut}/SDN.005.TPTM/${romanMonth}/${year}`;
+                        
+                        // Show success notification
+                        this.showNotification('Nomor surat berhasil digenerate', 'success');
+                        
+                    } catch (error) {
+                        console.error('Error generating nomor surat:', error);
+                        alert('Gagal generate nomor surat. Silakan coba lagi.');
+                    }
+                },
+                
+                // Handle File Upload
+                handleFileUpload(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        this.suratForm.file = file;
+                        this.showNotification('File berhasil diupload', 'success');
+                    }
+                },
+                
+                // Save Surat
+                async saveSurat() {
+                    if (!this.suratForm.template || !this.suratForm.noSurat || !this.suratForm.perihal) {
+                        alert('Silakan lengkapi semua field yang required');
+                        return;
+                    }
+                    
+                    try {
+                        // Simulasi save to backend
+                        const suratData = {
+                            ...this.suratForm,
+                            createdBy: this.userName,
+                            createdAt: new Date().toISOString()
+                        };
+                        
+                        // In real implementation, call API here
+                        // await this.apiCall('createSuratKeluar', suratData);
+                        
+                        console.log('Saving surat:', suratData);
+                        
+                        // Show success notification
+                        this.showNotification('Surat berhasil disimpan ke agenda', 'success');
+                        
+                        // Reset form
+                        this.resetForm();
+                        
+                    } catch (error) {
+                        console.error('Error saving surat:', error);
+                        alert('Gagal menyimpan surat. Silakan coba lagi.');
+                    }
+                },
+                
+                // Print Surat
+                printSurat() {
+                    if (!this.suratForm.noSurat) {
+                        alert('Generate nomor surat terlebih dahulu');
+                        return;
+                    }
+                    
+                    // Open print dialog
+                    window.print();
+                },
+                
+                // Reset Form
+                resetForm() {
+                    this.suratForm = {
+                        template: '',
+                        kodeArsip: '',
+                        noSurat: '',
+                        tanggal: new Date().toISOString().split('T')[0],
+                        perihal: '',
+                        tujuan: '',
+                        namaKegiatan: '',
+                        waktu: '',
+                        tempat: '',
+                        isi: '',
+                        file: null
+                    };
+                },
+                
+                // Show Notification
+                showNotification(message, type = 'info') {
+                    // Create notification element
+                    const notification = document.createElement('div');
+                    notification.className = `fixed top-20 right-4 z-50 p-4 rounded-lg shadow-lg transform transition-all duration-300 ${
+                        type === 'success' ? 'bg-green-500 text-white' : 
+                        type === 'error' ? 'bg-red-500 text-white' : 
+                        'bg-blue-500 text-white'
+                    }`;
+                    notification.innerHTML = `
+                        <div class="flex items-center">
+                            <i class="fas ${
+                                type === 'success' ? 'fa-check-circle' : 
+                                type === 'error' ? 'fa-exclamation-circle' : 
+                                'fa-info-circle'
+                            } mr-2"></i>
+                            <span>${message}</span>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(notification);
+                    
+                    // Remove after 3 seconds
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 3000);
+                },
+                
+                // API Call (placeholder for real implementation)
+                async apiCall(method, data = null) {
+                    // In real implementation, this would call your Google Apps Script backend
+                    console.log(`API Call: ${method}`, data);
+                    
+                    // Simulate API delay
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    // Return mock response
+                    return { success: true, data: null };
+                }
+            }));
+        });
     </script>
 </body>
 </html>
