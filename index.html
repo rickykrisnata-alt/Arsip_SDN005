@@ -342,6 +342,65 @@
                     </div>
                 </div>
 
+                <!-- Template Management (Admin Only) -->
+                <div x-data="{ templateOpen: false }" x-show="userRole === 'admin'">
+                    <button @click="templateOpen = !templateOpen" 
+                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg sidebar-menu-item">
+                        <i class="fas fa-file-alt mr-3 w-5 text-blue-400"></i>
+                        <span class="flex-1 text-left">Template Management</span>
+                        <i :class="templateOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
+                    </button>
+                    <div x-show="templateOpen" x-cloak x-transition class="ml-8 mt-1 space-y-1">
+                        <a href="#" @click="currentPage = 'template-register'; sidebarOpen = false"
+                           :class="currentPage === 'template-register' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                           class="block px-3 py-2 text-sm rounded">
+                            <i class="fas fa-plus-circle mr-2 text-xs text-blue-400"></i>Register Template
+                        </a>
+                        <a href="#" @click="currentPage = 'template-list'; sidebarOpen = false"
+                           :class="currentPage === 'template-list' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                           class="block px-3 py-2 text-sm rounded">
+                            <i class="fas fa-list mr-2 text-xs text-blue-400"></i>Daftar Template
+                        </a>
+                        <a href="#" @click="currentPage = 'template-edit'; sidebarOpen = false"
+                           :class="currentPage === 'template-edit' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                           class="block px-3 py-2 text-sm rounded">
+                            <i class="fas fa-edit mr-2 text-xs text-blue-400"></i>Edit Template
+                        </a>
+                    </div>
+                </div>
+
+                <!-- User Management (Admin Only) -->
+                <div x-data="{ userOpen: false }" x-show="userRole === 'admin'">
+                    <button @click="userOpen = !userOpen" 
+                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg sidebar-menu-item">
+                        <i class="fas fa-users mr-3 w-5 text-green-400"></i>
+                        <span class="flex-1 text-left">Manajemen User</span>
+                        <i :class="userOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
+                    </button>
+                    <div x-show="userOpen" x-cloak x-transition class="ml-8 mt-1 space-y-1">
+                        <a href="#" @click="currentPage = 'pengguna'; sidebarOpen = false"
+                           :class="currentPage === 'pengguna' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                           class="block px-3 py-2 text-sm rounded">
+                            <i class="fas fa-list mr-2 text-xs text-green-400"></i>Daftar User
+                        </a>
+                        <a href="#" @click="currentPage = 'pengguna-tambah'; sidebarOpen = false"
+                           :class="currentPage === 'pengguna-tambah' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                           class="block px-3 py-2 text-sm rounded">
+                            <i class="fas fa-user-plus mr-2 text-xs text-green-400"></i>Tambah User
+                        </a>
+                        <a href="#" @click="currentPage = 'pengguna-edit'; sidebarOpen = false"
+                           :class="currentPage === 'pengguna-edit' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                           class="block px-3 py-2 text-sm rounded">
+                            <i class="fas fa-user-edit mr-2 text-xs text-green-400"></i>Edit User
+                        </a>
+                        <a href="#" @click="currentPage = 'pengguna-reset'; sidebarOpen = false"
+                           :class="currentPage === 'pengguna-reset' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                           class="block px-3 py-2 text-sm rounded">
+                            <i class="fas fa-key mr-2 text-xs text-green-400"></i>Reset Password
+                        </a>
+                    </div>
+                </div>
+
                 <!-- Tentang Aplikasi -->
                 <div x-data="{ tentangOpen: false }">
                     <button @click="tentangOpen = !tentangOpen" 
@@ -499,6 +558,65 @@
                            :class="currentPage === 'arsip-list' ? 'sidebar-submenu active' : 'sidebar-submenu'"
                            class="block px-3 py-2 text-sm rounded">
                             <i class="fas fa-folder-open mr-2 text-xs"></i>Daftar Arsip
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Template Management (Admin Only) -->
+                <div x-data="{ templateOpen: false }" x-show="userRole === 'admin'">
+                    <button @click="templateOpen = !templateOpen" 
+                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg sidebar-menu-item">
+                        <i class="fas fa-file-alt mr-3 w-5 text-blue-400"></i>
+                        <span class="flex-1 text-left">Template Management</span>
+                        <i :class="templateOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
+                    </button>
+                    <div x-show="templateOpen" x-cloak x-transition class="ml-8 mt-1 space-y-1">
+                        <a href="#" @click="currentPage = 'template-register'"
+                           :class="currentPage === 'template-register' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                           class="block px-3 py-2 text-sm rounded">
+                            <i class="fas fa-plus-circle mr-2 text-xs text-blue-400"></i>Register Template
+                        </a>
+                        <a href="#" @click="currentPage = 'template-list'"
+                           :class="currentPage === 'template-list' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                           class="block px-3 py-2 text-sm rounded">
+                            <i class="fas fa-list mr-2 text-xs text-blue-400"></i>Daftar Template
+                        </a>
+                        <a href="#" @click="currentPage = 'template-edit'"
+                           :class="currentPage === 'template-edit' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                           class="block px-3 py-2 text-sm rounded">
+                            <i class="fas fa-edit mr-2 text-xs text-blue-400"></i>Edit Template
+                        </a>
+                    </div>
+                </div>
+
+                <!-- User Management (Admin Only) -->
+                <div x-data="{ userOpen: false }" x-show="userRole === 'admin'">
+                    <button @click="userOpen = !userOpen" 
+                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg sidebar-menu-item">
+                        <i class="fas fa-users mr-3 w-5 text-green-400"></i>
+                        <span class="flex-1 text-left">Manajemen User</span>
+                        <i :class="userOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
+                    </button>
+                    <div x-show="userOpen" x-cloak x-transition class="ml-8 mt-1 space-y-1">
+                        <a href="#" @click="currentPage = 'pengguna'"
+                           :class="currentPage === 'pengguna' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                           class="block px-3 py-2 text-sm rounded">
+                            <i class="fas fa-list mr-2 text-xs text-green-400"></i>Daftar User
+                        </a>
+                        <a href="#" @click="currentPage = 'pengguna-tambah'"
+                           :class="currentPage === 'pengguna-tambah' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                           class="block px-3 py-2 text-sm rounded">
+                            <i class="fas fa-user-plus mr-2 text-xs text-green-400"></i>Tambah User
+                        </a>
+                        <a href="#" @click="currentPage = 'pengguna-edit'"
+                           :class="currentPage === 'pengguna-edit' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                           class="block px-3 py-2 text-sm rounded">
+                            <i class="fas fa-user-edit mr-2 text-xs text-green-400"></i>Edit User
+                        </a>
+                        <a href="#" @click="currentPage = 'pengguna-reset'"
+                           :class="currentPage === 'pengguna-reset' ? 'sidebar-submenu active' : 'sidebar-submenu'"
+                           class="block px-3 py-2 text-sm rounded">
+                            <i class="fas fa-key mr-2 text-xs text-green-400"></i>Reset Password
                         </a>
                     </div>
                 </div>
@@ -935,17 +1053,49 @@
                         const response = await this.apiCall('getTemplates');
                         if (response.status === 'success' && response.data) {
                             this.suratTemplates = response.data;
+                            console.log('Templates loaded successfully:', this.suratTemplates.length);
                         }
                     } catch (error) {
-                        console.log('Using fallback templates');
+                        console.log('API failed, using fallback templates');
                         // Fallback templates jika error
                         this.suratTemplates = [
-                            { id: 'undangan', nama: 'Undangan Rapat', kategori: 'Undangan' },
-                            { id: 'pemberitahuan', nama: 'Pemberitahuan', kategori: 'Pemberitahuan' },
-                            { id: 'edaran', nama: 'Edaran', kategori: 'Edaran' },
-                            { id: 'pengantar', nama: 'Surat Pengantar', kategori: 'Pengantar' },
-                            { id: 'rekomendasi', nama: 'Surat Rekomendasi', kategori: 'Keterangan' }
+                            {
+                                id: 'undangan',
+                                nama: 'Undangan Rapat',
+                                kategori: 'Undangan',
+                                variables: ['{{nomorSurat}}', '{{tanggal}}', '{{perihal}}', '{{tujuan}}', '{{namaKegiatan}}', '{{waktu}}', '{{tempat}}'],
+                                content: 'Berdasarkan hasil rapat kami akan mengadakan kegiatan {{namaKegiatan}} pada:\n\nWaktu: {{waktu}}\nTempat: {{tempat}}\n\nDemikian undangan ini kami sampaikan, atas perhatian dan kehadirannya kami ucapkan terima kasih.'
+                            },
+                            {
+                                id: 'pemberitahuan',
+                                nama: 'Pemberitahuan',
+                                kategori: 'Pemberitahuan',
+                                variables: ['{{nomorSurat}}', '{{tanggal}}', '{{perihal}}', '{{tujuan}}'],
+                                content: 'Dengan hormat,\n\nBersama ini kami sampaikan pemberitahuan {{perihal}} kepada {{tujuan}}.\n\nPemberitahuan ini berlaku efektif sejak tanggal ditetapkan.\n\nDemikian pemberitahuan ini kami sampaikan, atas perhatian dan kerjasamanya kami ucapkan terima kasih.'
+                            },
+                            {
+                                id: 'edaran',
+                                nama: 'Edaran',
+                                kategori: 'Edaran',
+                                variables: ['{{nomorSurat}}', '{{tanggal}}', '{{perihal}}', '{{tujuan}}'],
+                                content: 'Assalamualaikum Wr. Wb.\n\nBismillahirrahmanirrahim\n\nSehubungan dengan {{perihal}}, kami edarkan kepada {{tujuan}} untuk memperhatikan hal-hal sebagai berikut:\n\n1. [Isi edaran]\n2. [Isi edaran]\n3. [Isi edaran]\n\nDemikian edaran ini kami sampaikan untuk diindahkan dan dilaksanakan sebagaimana mestinya.\n\nWassalamualaikum Wr. Wb.'
+                            },
+                            {
+                                id: 'pengantar',
+                                nama: 'Surat Pengantar',
+                                kategori: 'Pengantar',
+                                variables: ['{{nomorSurat}}', '{{tanggal}}', '{{perihal}}', '{{tujuan}}'],
+                                content: 'Yang terhormat,\n\nDengan hormat kami sampaikan bahwa kami akan mengantar {{perihal}} kepada {{tujuan}}.\n\nBersama ini kami lampirkan dokumen-dokumen yang diperlukan:\n\n1. [Dokumen 1]\n2. [Dokumen 2]\n3. [Dokumen 3]\n\nDemikian surat pengantar ini kami buat, atas perhatian dan kerjasamanya kami ucapkan terima kasih.'
+                            },
+                            {
+                                id: 'rekomendasi',
+                                nama: 'Surat Rekomendasi',
+                                kategori: 'Keterangan',
+                                variables: ['{{nomorSurat}}', '{{tanggal}}', '{{perihal}}', '{{tujuan}}'],
+                                content: 'Yang terhormat,\n\nBerdasarkan pengalaman dan penilaian kami, kami dengan ini merekomendasikan {{perihal}} kepada {{tujuan}}.\n\nPertimbangan kami merekomendasikan adalah:\n\n1. [Alasan 1]\n2. [Alasan 2]\n3. [Alasan 3]\n\nDemikian surat rekomendasi ini kami buat dengan sebenar-benarnya untuk dapat dipergunakan sebagaimana mestinya.'
+                            }
                         ];
+                        console.log('Fallback templates loaded:', this.suratTemplates.length);
                     }
                 },
                 
@@ -954,9 +1104,10 @@
                         const response = await this.apiCall('getKodeArsip');
                         if (response.status === 'success' && response.data) {
                             this.kodeArsipOptions = response.data;
+                            console.log('Kode arsip loaded successfully:', this.kodeArsipOptions.length);
                         }
                     } catch (error) {
-                        console.log('Using fallback kode arsip');
+                        console.log('API failed, using fallback kode arsip');
                         // Fallback kode arsip jika error
                         this.kodeArsipOptions = [
                             { kode: '400.1.1', nama: 'Kearsipan Umum' },
@@ -964,6 +1115,7 @@
                             { kode: '400.3.1', nama: 'Kearsipan Keuangan' },
                             { kode: '400.4.1', nama: 'Kearsipan Sarana Prasarana' }
                         ];
+                        console.log('Fallback kode arsip loaded:', this.kodeArsipOptions.length);
                     }
                 },
                 
@@ -1008,11 +1160,25 @@
 
                             // Reset nomor surat saat ganti template
                             this.suratForm.noSurat = '';
+                            
+                            console.log('Template loaded:', selectedTemplate.nama);
+                            this.showNotification('Template berhasil dimuat', 'success');
                         } else {
                             this.showNotification('Gagal memuat template: ' + response.message, 'error');
                         }
                     } catch (error) {
-                        this.showNotification('Terjadi kesalahan saat memuat template', 'error');
+                        console.error('Error loading template:', error);
+                        
+                        // Fallback: use template content from local data
+                        const selectedTemplate = this.suratTemplates.find(t => t.id === this.suratForm.template);
+                        if (selectedTemplate) {
+                            this.suratForm.isi = selectedTemplate.content;
+                            this.suratForm.perihal = selectedTemplate.nama;
+                            this.suratForm.noSurat = '';
+                            
+                            console.log('Template loaded from fallback:', selectedTemplate.nama);
+                            this.showNotification('Template dimuat dari data lokal', 'warning');
+                        }
                     } finally {
                         this.loading = false;
                     }
