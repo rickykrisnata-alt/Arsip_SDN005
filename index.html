@@ -19,6 +19,44 @@
         }
         .hover-scale { transition: transform 0.2s; }
         .hover-scale:hover { transform: scale(1.02); }
+        
+        /* Custom color palette - Eyes Friendly */
+        :root {
+            --primary: #6366f1;      /* Soft indigo */
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --secondary: #06b6d4;    /* Soft blue */
+            --secondary-light: #0284c7;
+            --secondary-dark: #075985;
+            --accent: #10b981;      /* Soft teal */
+            --accent-light: #14b8a6;
+            --accent-dark: #0f766e;
+            --success: #059669;      /* Soft green */
+            --success-light: #10b981;
+            --success-dark: #047857;
+            --warning: #d97706;      /* Soft amber */
+            --warning-light: #f59e0b;
+            --warning-dark: #b45309;
+            --danger: #ef4444;        /* Soft red */
+            --danger-light: #f87171;
+            --danger-dark: #dc2626;
+            --neutral-50: #f9fafb;
+            --neutral-100: #f3f4f6;
+            --neutral-200: #e5e7eb;
+            --neutral-300: #d1d5db;
+            --neutral-400: #9ca3af;
+            --neutral-500: #64748b;
+            --neutral-600: #475569;
+            --neutral-700: #334155;
+            --neutral-800: #1e293b;
+            --neutral-900: #0f172a;
+            --white: #ffffff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+        }
+        
+        /* Glass effect */
         .glass-effect {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -35,72 +73,170 @@
                 display: block;
             }
         }
+        
+        /* Card styles */
+        .card {
+            background: var(--white);
+            border: 1px solid var(--neutral-200);
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transform: translateY(-2px);
+        }
+        
+        /* Button styles */
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: var(--white);
+            color: var(--neutral-700);
+            border: 1px solid var(--neutral-300);
+            border-radius: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--neutral-50);
+            border-color: var(--neutral-400);
+            color: var(--neutral-800);
+        }
+        
+        /* Status badge styles */
+        .badge-success {
+            background: var(--success);
+            color: var(--white);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .badge-warning {
+            background: var(--warning);
+            color: var(--white);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .badge-danger {
+            background: var(--danger);
+            color: var(--white);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        /* Icon colors */
+        .icon-primary { color: var(--primary); }
+        .icon-secondary { color: var(--secondary); }
+        .icon-success { color: var(--success); }
+        .icon-warning { color: var(--warning); }
+        .icon-danger { color: var(--danger); }
+        .icon-neutral { color: var(--neutral-500); }
+        
+        /* Text colors */
+        .text-primary { color: var(--primary); }
+        .text-secondary { color: var(--secondary); }
+        .text-success { color: var(--success); }
+        .text-warning { color: var(--warning); }
+        .text-danger { color: var(--danger); }
+        .text-neutral { color: var(--neutral-600); }
+        
+        /* Background colors */
+        .bg-primary { background-color: var(--primary); }
+        .bg-secondary { background-color: var(--secondary); }
+        .bg-success { background-color: var(--success); }
+        .bg-warning { background-color: var(--warning); }
+        .bg-danger { background-color: var(--danger); }
+        .bg-neutral { background-color: var(--neutral-100); }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
     <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-gray-200 fixed top-0 left-0 right-0 z-40">
+    <header class="bg-white border-b border-neutral-200 fixed top-0 left-0 right-0 z-40">
         <div class="px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
-                    <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 lg:hidden">
+                    <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-md text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 lg:hidden">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                     <div class="flex-shrink-0 flex items-center ml-4 lg:ml-0">
-                        <i class="fas fa-school text-blue-600 text-2xl mr-3"></i>
+                        <i class="fas fa-school text-primary text-2xl mr-3"></i>
                         <div>
-                            <h1 class="text-xl font-bold text-gray-900">Sistem Kearsipan Surat</h1>
-                            <p class="text-xs text-gray-500">SDN 005</p>
+                            <h1 class="text-xl font-bold text-neutral-900">Sistem Kearsipan Surat</h1>
+                            <p class="text-xs text-neutral-500">SDN 005</p>
                         </div>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
                     <div class="relative" x-data="{ notificationOpen: false }">
-                        <button @click="notificationOpen = !notificationOpen" class="p-2 rounded-full text-gray-600 hover:text-gray-900 hover:bg-gray-100 relative">
+                        <button @click="notificationOpen = !notificationOpen" class="p-2 rounded-full text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 relative">
                             <i class="fas fa-bell text-lg"></i>
-                            <span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400"></span>
+                            <span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-danger"></span>
                         </button>
                         <div x-show="notificationOpen" @click.away="notificationOpen = false" x-cloak
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 transform scale-95"
                              x-transition:enter-end="opacity-100 transform scale-100"
-                             class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                            <div class="p-4 border-b border-gray-200">
-                                <h3 class="text-sm font-medium text-gray-900">Notifikasi</h3>
+                             class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-neutral-200 z-50">
+                            <div class="p-4 border-b border-neutral-200">
+                                <h3 class="text-sm font-medium text-neutral-900">Notifikasi</h3>
                             </div>
                             <div class="max-h-64 overflow-y-auto">
-                                <div class="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100">
-                                    <p class="text-sm text-gray-900">Surat masuk baru dari Dinas Pendidikan</p>
-                                    <p class="text-xs text-gray-500 mt-1">2 jam yang lalu</p>
+                                <div class="p-3 hover:bg-neutral-50 cursor-pointer border-b border-neutral-100">
+                                    <p class="text-sm text-neutral-900">Surat masuk baru dari Dinas Pendidikan</p>
+                                    <p class="text-xs text-neutral-500 mt-1">2 jam yang lalu</p>
                                 </div>
-                                <div class="p-3 hover:bg-gray-50 cursor-pointer">
-                                    <p class="text-sm text-gray-900">Template surat baru ditambahkan</p>
-                                    <p class="text-xs text-gray-500 mt-1">1 hari yang lalu</p>
+                                <div class="p-3 hover:bg-neutral-50 cursor-pointer">
+                                    <p class="text-sm text-neutral-900">Template surat baru ditambahkan</p>
+                                    <p class="text-xs text-neutral-500 mt-1">1 hari yang lalu</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="relative" x-data="{ profileOpen: false }">
-                        <button @click="profileOpen = !profileOpen" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
-                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                        <button @click="profileOpen = !profileOpen" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-neutral-100">
+                            <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
                                 <span class="text-white text-sm font-medium" x-text="userRole === 'admin' ? 'A' : userRole === 'pimpinan' ? 'P' : 'U'"></span>
                             </div>
-                            <span class="hidden md:block text-sm font-medium text-gray-700" x-text="userRole === 'admin' ? 'Admin' : userRole === 'pimpinan' ? 'Pimpinan' : 'User'"></span>
-                            <i class="fas fa-chevron-down text-xs text-gray-500"></i>
+                            <span class="hidden md:block text-sm font-medium text-neutral-700" x-text="userRole === 'admin' ? 'Admin' : userRole === 'pimpinan' ? 'Pimpinan' : 'User'"></span>
+                            <i class="fas fa-chevron-down text-xs text-neutral-500"></i>
                         </button>
                         <div x-show="profileOpen" @click.away="profileOpen = false" x-cloak
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 transform scale-95"
                              x-transition:enter-end="opacity-100 transform scale-100"
-                             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-neutral-200 z-50">
+                            <a href="#" class="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
                                 <i class="fas fa-user mr-2"></i> Profil
                             </a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <a href="#" class="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100">
                                 <i class="fas fa-cog mr-2"></i> Pengaturan
                             </a>
-                            <hr class="my-1">
-                            <a href="#" @click="logout()" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                            <hr class="my-1 border-neutral-200">
+                            <a href="#" @click="logout()" class="block px-4 py-2 text-sm text-danger hover:bg-red-50">
                                 <i class="fas fa-sign-out-alt mr-2"></i> Keluar
                             </a>
                         </div>
@@ -119,14 +255,14 @@
            x-transition:leave="transition ease-in duration-200"
            x-transition:leave-start="opacity-100 transform translate-x-0"
            x-transition:leave-end="opacity-0 transform -translate-x-full"
-           class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl border-r border-gray-200 lg:hidden"
+           class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl border-r border-neutral-200 lg:hidden"
            @click.away="sidebarOpen = false">
         <div class="flex flex-col h-full pt-16">
             <nav class="flex-1 px-4 py-6 space-y-2">
                 <!-- Dashboard -->
                 <div x-data="{ dashboardOpen: false }">
                     <button @click="dashboardOpen = !dashboardOpen; currentPage = 'dashboard'; sidebarOpen = false"
-                           :class="currentPage === 'dashboard' ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700' : 'text-gray-700 hover:bg-gray-100'"
+                           :class="currentPage === 'dashboard' ? 'bg-primary text-white border-r-2 border-primary-dark' : 'text-neutral-700 hover:bg-neutral-100'"
                            class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors">
                         <i class="fas fa-tachometer-alt mr-3 w-5"></i>
                         <span class="flex-1 text-left">Dashboard</span>
@@ -134,7 +270,7 @@
                     </button>
                     <div x-show="dashboardOpen" x-cloak x-transition class="ml-8 mt-1 space-y-1">
                         <a href="#" @click="currentPage = 'dashboard-quick'; sidebarOpen = false"
-                           :class="currentPage === 'dashboard-quick' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                           :class="currentPage === 'dashboard-quick' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                            class="block px-3 py-2 text-sm rounded transition-colors">
                             <i class="fas fa-bolt mr-2 text-xs"></i>Quick Akses
                         </a>
@@ -144,7 +280,7 @@
                 <!-- Buat Surat -->
                 <div x-data="{ buatSuratOpen: false }">
                     <button @click="buatSuratOpen = !buatSuratOpen" 
-                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg text-neutral-700 hover:bg-neutral-100 transition-colors"
                            x-show="['admin', 'user'].includes(userRole)">
                         <i class="fas fa-plus-circle mr-3 w-5"></i>
                         <span class="flex-1 text-left">Buat Surat</span>
@@ -153,20 +289,20 @@
                     <div x-show="buatSuratOpen" x-cloak x-transition class="ml-8 mt-1 space-y-1">
                         <div x-data="{ buatSuratKeluarOpen: false }">
                             <button @click="buatSuratKeluarOpen = !buatSuratKeluarOpen; currentPage = 'buat-surat-keluar'; sidebarOpen = false"
-                                   :class="currentPage === 'buat-surat-keluar' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                                   :class="currentPage === 'buat-surat-keluar' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                                    class="w-full flex items-center px-3 py-2 text-sm rounded transition-colors">
                                 <i class="fas fa-file-alt mr-2 text-xs"></i>
                                 <span class="flex-1 text-left">Buat Surat Keluar</span>
                                 <i :class="buatSuratKeluarOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
                             </button>
                             <div x-show="buatSuratKeluarOpen" x-cloak x-transition class="ml-6 mt-1 space-y-1">
-                                <div class="px-3 py-2 text-xs text-gray-500 italic">
+                                <div class="px-3 py-2 text-xs text-neutral-500 italic">
                                     • Menggunakan template surat
                                 </div>
-                                <div class="px-3 py-2 text-xs text-gray-500 italic">
+                                <div class="px-3 py-2 text-xs text-neutral-500 italic">
                                     • Template dipilih melalui dropdown
                                 </div>
-                                <div class="px-3 py-2 text-xs text-gray-500 italic" x-show="userRole === 'admin'">
+                                <div class="px-3 py-2 text-xs text-neutral-500 italic" x-show="userRole === 'admin'">
                                     • Template dapat ditambah dan dikelola oleh Admin
                                 </div>
                             </div>
@@ -177,7 +313,7 @@
                 <!-- Agenda Surat -->
                 <div x-data="{ agendaOpen: false }">
                     <button @click="agendaOpen = !agendaOpen" 
-                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg text-neutral-700 hover:bg-neutral-100 transition-colors">
                         <i class="fas fa-envelope mr-3 w-5"></i>
                         <span class="flex-1 text-left">Agenda Surat</span>
                         <i :class="agendaOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
@@ -186,25 +322,25 @@
                         <!-- Masuk -->
                         <div x-data="{ masukOpen: false }">
                             <button @click="masukOpen = !masukOpen" 
-                                   class="w-full flex items-center px-3 py-2 text-sm rounded transition-colors text-gray-600 hover:bg-gray-50">
+                                   class="w-full flex items-center px-3 py-2 text-sm rounded transition-colors text-neutral-600 hover:bg-neutral-50">
                                 <i class="fas fa-envelope-open mr-2 text-xs"></i>
                                 <span class="flex-1 text-left">Masuk</span>
                                 <i :class="masukOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
                             </button>
                             <div x-show="masukOpen" x-cloak x-transition class="ml-6 mt-1 space-y-1">
                                 <a href="#" @click="currentPage = 'agenda-masuk-upload'; sidebarOpen = false"
-                                   :class="currentPage === 'agenda-masuk-upload' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                                   :class="currentPage === 'agenda-masuk-upload' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                                    class="block px-3 py-2 text-sm rounded transition-colors">
                                     <i class="fas fa-upload mr-2 text-xs"></i>Upload berkas surat masuk
                                 </a>
                                 <a href="#" @click="currentPage = 'agenda-masuk-disposisi'; sidebarOpen = false"
-                                   :class="currentPage === 'agenda-masuk-disposisi' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                                   :class="currentPage === 'agenda-masuk-disposisi' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                                    class="block px-3 py-2 text-sm rounded transition-colors"
                                    x-show="['admin', 'pimpinan'].includes(userRole)">
                                     <i class="fas fa-tasks mr-2 text-xs"></i>Disposisi surat
                                 </a>
                                 <a href="#" @click="currentPage = 'agenda-masuk-daftar'; sidebarOpen = false"
-                                   :class="currentPage === 'agenda-masuk-daftar' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                                   :class="currentPage === 'agenda-masuk-daftar' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                                    class="block px-3 py-2 text-sm rounded transition-colors">
                                     <i class="fas fa-list mr-2 text-xs"></i>Daftar Surat Masuk
                                 </a>
@@ -214,19 +350,19 @@
                         <!-- Keluar -->
                         <div x-data="{ keluarOpen: false }">
                             <button @click="keluarOpen = !keluarOpen" 
-                                   class="w-full flex items-center px-3 py-2 text-sm rounded transition-colors text-gray-600 hover:bg-gray-50">
+                                   class="w-full flex items-center px-3 py-2 text-sm rounded transition-colors text-neutral-600 hover:bg-neutral-50">
                                 <i class="fas fa-paper-plane mr-2 text-xs"></i>
                                 <span class="flex-1 text-left">Keluar</span>
                                 <i :class="keluarOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
                             </button>
                             <div x-show="keluarOpen" x-cloak x-transition class="ml-6 mt-1 space-y-1">
                                 <a href="#" @click="currentPage = 'agenda-keluar-upload'; sidebarOpen = false"
-                                   :class="currentPage === 'agenda-keluar-upload' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                                   :class="currentPage === 'agenda-keluar-upload' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                                    class="block px-3 py-2 text-sm rounded transition-colors">
                                     <i class="fas fa-upload mr-2 text-xs"></i>Upload berkas surat keluar
                                 </a>
                                 <a href="#" @click="currentPage = 'agenda-keluar-daftar'; sidebarOpen = false"
-                                   :class="currentPage === 'agenda-keluar-daftar' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                                   :class="currentPage === 'agenda-keluar-daftar' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                                    class="block px-3 py-2 text-sm rounded transition-colors">
                                     <i class="fas fa-list mr-2 text-xs"></i>Daftar Surat Keluar
                                 </a>
@@ -238,19 +374,19 @@
                 <!-- Arsip -->
                 <div x-data="{ arsipOpen: false }">
                     <button @click="arsipOpen = !arsipOpen" 
-                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg text-neutral-700 hover:bg-neutral-100 transition-colors">
                         <i class="fas fa-archive mr-3 w-5"></i>
                         <span class="flex-1 text-left">Arsip</span>
                         <i :class="arsipOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
                     </button>
                     <div x-show="arsipOpen" x-cloak x-transition class="ml-8 mt-1 space-y-1">
                         <a href="#" @click="currentPage = 'arsip-register'; sidebarOpen = false"
-                           :class="currentPage === 'arsip-register' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                           :class="currentPage === 'arsip-register' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                            class="block px-3 py-2 text-sm rounded transition-colors">
                             <i class="fas fa-plus-square mr-2 text-xs"></i>Register Arsip
                         </a>
                         <a href="#" @click="currentPage = 'arsip-daftar'; sidebarOpen = false"
-                           :class="currentPage === 'arsip-daftar' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                           :class="currentPage === 'arsip-daftar' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                            class="block px-3 py-2 text-sm rounded transition-colors">
                             <i class="fas fa-list-alt mr-2 text-xs"></i>Daftar Arsip
                         </a>
@@ -260,24 +396,24 @@
                 <!-- Tentang Aplikasi -->
                 <div x-data="{ tentangOpen: false }">
                     <button @click="tentangOpen = !tentangOpen" 
-                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg text-neutral-700 hover:bg-neutral-100 transition-colors">
                         <i class="fas fa-info-circle mr-3 w-5"></i>
                         <span class="flex-1 text-left">Tentang Aplikasi</span>
                         <i :class="tentangOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
                     </button>
                     <div x-show="tentangOpen" x-cloak x-transition class="ml-8 mt-1 space-y-1">
                         <a href="#" @click="currentPage = 'tentang-info'; sidebarOpen = false"
-                           :class="currentPage === 'tentang-info' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                           :class="currentPage === 'tentang-info' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                            class="block px-3 py-2 text-sm rounded transition-colors">
                             <i class="fas fa-info mr-2 text-xs"></i>Info Penggunaan
                         </a>
                         <a href="#" @click="currentPage = 'tentang-feedback'; sidebarOpen = false"
-                           :class="currentPage === 'tentang-feedback' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                           :class="currentPage === 'tentang-feedback' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                            class="block px-3 py-2 text-sm rounded transition-colors">
                             <i class="fas fa-comment mr-2 text-xs"></i>Feedback / Kontak / Masukan
                         </a>
                         <a href="#" @click="logout(); sidebarOpen = false"
-                           class="block px-3 py-2 text-sm rounded transition-colors text-red-600 hover:bg-red-50">
+                           class="block px-3 py-2 text-sm rounded transition-colors text-danger hover:bg-red-50">
                             <i class="fas fa-sign-out-alt mr-2 text-xs"></i>Logout
                         </a>
                     </div>
@@ -287,13 +423,13 @@
     </aside>
 
     <!-- Desktop Sidebar -->
-    <aside class="sidebar-desktop fixed inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200">
+    <aside class="sidebar-desktop fixed inset-y-0 left-0 z-30 w-64 bg-white border-r border-neutral-200">
         <div class="flex flex-col h-full pt-16">
             <nav class="flex-1 px-4 py-6 space-y-2">
                 <!-- Dashboard -->
                 <div x-data="{ dashboardOpen: false }">
                     <button @click="dashboardOpen = !dashboardOpen; currentPage = 'dashboard'"
-                           :class="currentPage === 'dashboard' ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700' : 'text-gray-700 hover:bg-gray-100'"
+                           :class="currentPage === 'dashboard' ? 'bg-primary text-white border-r-2 border-primary-dark' : 'text-neutral-700 hover:bg-neutral-100'"
                            class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors">
                         <i class="fas fa-tachometer-alt mr-3 w-5"></i>
                         <span class="flex-1 text-left">Dashboard</span>
@@ -301,7 +437,7 @@
                     </button>
                     <div x-show="dashboardOpen" x-cloak x-transition class="ml-8 mt-1 space-y-1">
                         <a href="#" @click="currentPage = 'dashboard-quick'"
-                           :class="currentPage === 'dashboard-quick' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                           :class="currentPage === 'dashboard-quick' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                            class="block px-3 py-2 text-sm rounded transition-colors">
                             <i class="fas fa-bolt mr-2 text-xs"></i>Quick Akses
                         </a>
@@ -311,7 +447,7 @@
                 <!-- Buat Surat -->
                 <div x-data="{ buatSuratOpen: false }">
                     <button @click="buatSuratOpen = !buatSuratOpen" 
-                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg text-neutral-700 hover:bg-neutral-100 transition-colors"
                            x-show="['admin', 'user'].includes(userRole)">
                         <i class="fas fa-plus-circle mr-3 w-5"></i>
                         <span class="flex-1 text-left">Buat Surat</span>
@@ -320,20 +456,20 @@
                     <div x-show="buatSuratOpen" x-cloak x-transition class="ml-8 mt-1 space-y-1">
                         <div x-data="{ buatSuratKeluarOpen: false }">
                             <button @click="buatSuratKeluarOpen = !buatSuratKeluarOpen; currentPage = 'buat-surat-keluar'"
-                                   :class="currentPage === 'buat-surat-keluar' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                                   :class="currentPage === 'buat-surat-keluar' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                                    class="w-full flex items-center px-3 py-2 text-sm rounded transition-colors">
                                 <i class="fas fa-file-alt mr-2 text-xs"></i>
                                 <span class="flex-1 text-left">Buat Surat Keluar</span>
                                 <i :class="buatSuratKeluarOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
                             </button>
                             <div x-show="buatSuratKeluarOpen" x-cloak x-transition class="ml-6 mt-1 space-y-1">
-                                <div class="px-3 py-2 text-xs text-gray-500 italic">
+                                <div class="px-3 py-2 text-xs text-neutral-500 italic">
                                     • Menggunakan template surat
                                 </div>
-                                <div class="px-3 py-2 text-xs text-gray-500 italic">
+                                <div class="px-3 py-2 text-xs text-neutral-500 italic">
                                     • Template dipilih melalui dropdown
                                 </div>
-                                <div class="px-3 py-2 text-xs text-gray-500 italic" x-show="userRole === 'admin'">
+                                <div class="px-3 py-2 text-xs text-neutral-500 italic" x-show="userRole === 'admin'">
                                     • Template dapat ditambah dan dikelola oleh Admin
                                 </div>
                             </div>
@@ -344,7 +480,7 @@
                 <!-- Agenda Surat -->
                 <div x-data="{ agendaOpen: false }">
                     <button @click="agendaOpen = !agendaOpen" 
-                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg text-neutral-700 hover:bg-neutral-100 transition-colors">
                         <i class="fas fa-envelope mr-3 w-5"></i>
                         <span class="flex-1 text-left">Agenda Surat</span>
                         <i :class="agendaOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
@@ -353,25 +489,25 @@
                         <!-- Masuk -->
                         <div x-data="{ masukOpen: false }">
                             <button @click="masukOpen = !masukOpen" 
-                                   class="w-full flex items-center px-3 py-2 text-sm rounded transition-colors text-gray-600 hover:bg-gray-50">
+                                   class="w-full flex items-center px-3 py-2 text-sm rounded transition-colors text-neutral-600 hover:bg-neutral-50">
                                 <i class="fas fa-envelope-open mr-2 text-xs"></i>
                                 <span class="flex-1 text-left">Masuk</span>
                                 <i :class="masukOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
                             </button>
                             <div x-show="masukOpen" x-cloak x-transition class="ml-6 mt-1 space-y-1">
                                 <a href="#" @click="currentPage = 'agenda-masuk-upload'"
-                                   :class="currentPage === 'agenda-masuk-upload' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                                   :class="currentPage === 'agenda-masuk-upload' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                                    class="block px-3 py-2 text-sm rounded transition-colors">
                                     <i class="fas fa-upload mr-2 text-xs"></i>Upload berkas surat masuk
                                 </a>
                                 <a href="#" @click="currentPage = 'agenda-masuk-disposisi'"
-                                   :class="currentPage === 'agenda-masuk-disposisi' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                                   :class="currentPage === 'agenda-masuk-disposisi' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                                    class="block px-3 py-2 text-sm rounded transition-colors"
                                    x-show="['admin', 'pimpinan'].includes(userRole)">
                                     <i class="fas fa-tasks mr-2 text-xs"></i>Disposisi surat
                                 </a>
                                 <a href="#" @click="currentPage = 'agenda-masuk-daftar'"
-                                   :class="currentPage === 'agenda-masuk-daftar' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                                   :class="currentPage === 'agenda-masuk-daftar' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                                    class="block px-3 py-2 text-sm rounded transition-colors">
                                     <i class="fas fa-list mr-2 text-xs"></i>Daftar Surat Masuk
                                 </a>
@@ -381,19 +517,19 @@
                         <!-- Keluar -->
                         <div x-data="{ keluarOpen: false }">
                             <button @click="keluarOpen = !keluarOpen" 
-                                   class="w-full flex items-center px-3 py-2 text-sm rounded transition-colors text-gray-600 hover:bg-gray-50">
+                                   class="w-full flex items-center px-3 py-2 text-sm rounded transition-colors text-neutral-600 hover:bg-neutral-50">
                                 <i class="fas fa-paper-plane mr-2 text-xs"></i>
                                 <span class="flex-1 text-left">Keluar</span>
                                 <i :class="keluarOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
                             </button>
                             <div x-show="keluarOpen" x-cloak x-transition class="ml-6 mt-1 space-y-1">
                                 <a href="#" @click="currentPage = 'agenda-keluar-upload'"
-                                   :class="currentPage === 'agenda-keluar-upload' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                                   :class="currentPage === 'agenda-keluar-upload' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                                    class="block px-3 py-2 text-sm rounded transition-colors">
                                     <i class="fas fa-upload mr-2 text-xs"></i>Upload berkas surat keluar
                                 </a>
                                 <a href="#" @click="currentPage = 'agenda-keluar-daftar'"
-                                   :class="currentPage === 'agenda-keluar-daftar' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                                   :class="currentPage === 'agenda-keluar-daftar' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                                    class="block px-3 py-2 text-sm rounded transition-colors">
                                     <i class="fas fa-list mr-2 text-xs"></i>Daftar Surat Keluar
                                 </a>
@@ -405,19 +541,19 @@
                 <!-- Arsip -->
                 <div x-data="{ arsipOpen: false }">
                     <button @click="arsipOpen = !arsipOpen" 
-                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg text-neutral-700 hover:bg-neutral-100 transition-colors">
                         <i class="fas fa-archive mr-3 w-5"></i>
                         <span class="flex-1 text-left">Arsip</span>
                         <i :class="arsipOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
                     </button>
                     <div x-show="arsipOpen" x-cloak x-transition class="ml-8 mt-1 space-y-1">
                         <a href="#" @click="currentPage = 'arsip-register'"
-                           :class="currentPage === 'arsip-register' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                           :class="currentPage === 'arsip-register' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                            class="block px-3 py-2 text-sm rounded transition-colors">
                             <i class="fas fa-plus-square mr-2 text-xs"></i>Register Arsip
                         </a>
                         <a href="#" @click="currentPage = 'arsip-daftar'"
-                           :class="currentPage === 'arsip-daftar' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                           :class="currentPage === 'arsip-daftar' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                            class="block px-3 py-2 text-sm rounded transition-colors">
                             <i class="fas fa-list-alt mr-2 text-xs"></i>Daftar Arsip
                         </a>
@@ -427,24 +563,24 @@
                 <!-- Tentang Aplikasi -->
                 <div x-data="{ tentangOpen: false }">
                     <button @click="tentangOpen = !tentangOpen" 
-                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                           class="w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg text-neutral-700 hover:bg-neutral-100 transition-colors">
                         <i class="fas fa-info-circle mr-3 w-5"></i>
                         <span class="flex-1 text-left">Tentang Aplikasi</span>
                         <i :class="tentangOpen ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="text-xs"></i>
                     </button>
                     <div x-show="tentangOpen" x-cloak x-transition class="ml-8 mt-1 space-y-1">
                         <a href="#" @click="currentPage = 'tentang-info'"
-                           :class="currentPage === 'tentang-info' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                           :class="currentPage === 'tentang-info' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                            class="block px-3 py-2 text-sm rounded transition-colors">
                             <i class="fas fa-info mr-2 text-xs"></i>Info Penggunaan
                         </a>
                         <a href="#" @click="currentPage = 'tentang-feedback'"
-                           :class="currentPage === 'tentang-feedback' ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'"
+                           :class="currentPage === 'tentang-feedback' ? 'bg-primary text-white' : 'text-neutral-600 hover:bg-neutral-50'"
                            class="block px-3 py-2 text-sm rounded transition-colors">
                             <i class="fas fa-comment mr-2 text-xs"></i>Feedback / Kontak / Masukan
                         </a>
                         <a href="#" @click="logout()"
-                           class="block px-3 py-2 text-sm rounded transition-colors text-red-600 hover:bg-red-50">
+                           class="block px-3 py-2 text-sm rounded transition-colors text-danger hover:bg-red-50">
                             <i class="fas fa-sign-out-alt mr-2 text-xs"></i>Logout
                         </a>
                     </div>
@@ -459,67 +595,114 @@
             <!-- Dashboard Page -->
             <div x-show="currentPage === 'dashboard'" x-cloak class="fade-in">
                 <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900">Dashboard</h2>
-                    <p class="text-gray-600">Ringkasan statistik kearsipan surat</p>
+                    <h2 class="text-2xl font-bold text-neutral-900">Dashboard</h2>
+                    <p class="text-neutral-600">Selamat datang di Sistem Kearsipan Surat SDN 005</p>
                 </div>
 
-                <!-- Quick Access Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover-scale">
-                        <div class="flex items-center">
-                            <div class="p-3 bg-blue-100 rounded-lg">
-                                <i class="fas fa-envelope text-blue-600 text-xl"></i>
-                            </div>
-                            <div class="ml-4">
-                                <p class="text-sm text-gray-500">Surat Masuk</p>
-                                <p class="text-2xl font-bold text-gray-900">24</p>
-                            </div>
+                <!-- Welcome Section -->
+                <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-8 mb-8">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-semibold text-neutral-900">Selamat Datang!</h3>
+                            <p class="text-neutral-600 mt-1">Sistem kearsipan surat digital siap membantu pekerjaan administrasi sekolah Anda.</p>
                         </div>
-                    </div>
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover-scale">
-                        <div class="flex items-center">
-                            <div class="p-3 bg-green-100 rounded-lg">
-                                <i class="fas fa-paper-plane text-green-600 text-xl"></i>
-                            </div>
-                            <div class="ml-4">
-                                <p class="text-sm text-gray-500">Surat Keluar</p>
-                                <p class="text-2xl font-bold text-gray-900">18</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover-scale">
-                        <div class="flex items-center">
-                            <div class="p-3 bg-purple-100 rounded-lg">
-                                <i class="fas fa-archive text-purple-600 text-xl"></i>
-                            </div>
-                            <div class="ml-4">
-                                <p class="text-sm text-gray-500">Total Arsip</p>
-                                <p class="text-2xl font-bold text-gray-900">142</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover-scale">
-                        <div class="flex items-center">
-                            <div class="p-3 bg-orange-100 rounded-lg">
-                                <i class="fas fa-clock text-orange-600 text-xl"></i>
-                            </div>
-                            <div class="ml-4">
-                                <p class="text-sm text-gray-500">Menunggu Disposisi</p>
-                                <p class="text-2xl font-bold text-gray-900">5</p>
-                            </div>
+                        <div class="text-right">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full bg-success text-white text-sm font-medium">
+                                <i class="fas fa-check-circle mr-2"></i>
+                                <span x-text="userRole === 'admin' ? 'Administrator' : userRole === 'pimpinan' ? 'Pimpinan' : 'User'"></span>
+                            </span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Charts Section -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Grafik Surat Masuk/Keluar</h3>
-                        <canvas id="letterChart" width="400" height="200"></canvas>
+                <!-- Quick Actions -->
+                <div class="grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="card p-6 hover:shadow-lg cursor-pointer" @click="currentPage = 'buat-surat-keluar'" x-show="['admin', 'user'].includes(userRole)">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-primary rounded-xl mr-4">
+                                <i class="fas fa-plus-circle text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-neutral-900">Buat Surat</h4>
+                                <p class="text-sm text-neutral-600">Buat surat keluar dengan template</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Statistik per Kategori</h3>
-                        <canvas id="categoryChart" width="400" height="200"></canvas>
+                    
+                    <div class="card p-6 hover:shadow-lg cursor-pointer" @click="currentPage = 'agenda-masuk-upload'">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-secondary rounded-xl mr-4">
+                                <i class="fas fa-upload text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-neutral-900">Upload Surat Masuk</h4>
+                                <p class="text-sm text-neutral-600">Upload surat masuk baru</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-6 hover:shadow-lg cursor-pointer" @click="currentPage = 'arsip-register'">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-accent rounded-xl mr-4">
+                                <i class="fas fa-archive text-white text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-neutral-900">Register Arsip</h4>
+                                <p class="text-sm text-neutral-600">Daftarkan dokumen</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-semibold text-neutral-900">Aktivitas Terkini</h3>
+                        <button class="btn-secondary text-sm">
+                            <i class="fas fa-sync-alt mr-2"></i>
+                            Refresh
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start p-4 bg-neutral-50 rounded-lg">
+                            <div class="flex-shrink-0">
+                                <div class="p-2 bg-success rounded-full">
+                                    <i class="fas fa-check text-white text-sm"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <p class="text-sm font-medium text-neutral-900">Surat masuk baru telah diupload</p>
+                                <p class="text-xs text-neutral-500">Dari Dinas Pendidikan</p>
+                                <p class="text-xs text-neutral-400">2 jam yang lalu</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start p-4 bg-neutral-50 rounded-lg">
+                            <div class="flex-shrink-0">
+                                <div class="p-2 bg-warning rounded-full">
+                                    <i class="fas fa-clock text-white text-sm"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <p class="text-sm font-medium text-neutral-900">Menunggu disposisi</p>
+                                <p class="text-xs text-neutral-500">5 surat menunggu disposisi</p>
+                                <p class="text-xs text-neutral-400">Perlu ditindaklan</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start p-4 bg-neutral-50 rounded-lg">
+                            <div class="flex-shrink-0">
+                                <div class="p-2 bg-danger rounded-full">
+                                    <i class="fas fa-exclamation-triangle text-white text-sm"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <p class="text-sm font-medium text-neutral-900">Template perlu diperbarui</p>
+                                <p class="text-xs text-neutral-500">3 template perlu update</p>
+                                <p class="text-xs text-neutral-400">Hubungi admin</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -527,36 +710,36 @@
             <!-- Quick Akses Subpage -->
             <div x-show="currentPage === 'dashboard-quick'" x-cloak class="fade-in">
                 <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900">Quick Akses</h2>
-                    <p class="text-gray-600">Akses cepat ke fitur-fitur utama</p>
+                    <h2 class="text-2xl font-bold text-neutral-900">Quick Akses</h2>
+                    <p class="text-neutral-600">Akses cepat ke fitur-fitur utama</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover-scale cursor-pointer" @click="currentPage = 'buat-surat-keluar'" x-show="['admin', 'user'].includes(userRole)">
+                    <div class="card p-6 hover:shadow-lg cursor-pointer" @click="currentPage = 'buat-surat-keluar'" x-show="['admin', 'user'].includes(userRole)">
                         <div class="text-center">
-                            <div class="p-4 bg-blue-100 rounded-full inline-block mb-4">
-                                <i class="fas fa-plus-circle text-blue-600 text-2xl"></i>
+                            <div class="p-4 bg-primary rounded-xl inline-block mb-4">
+                                <i class="fas fa-plus-circle text-white text-2xl"></i>
                             </div>
-                            <h3 class="font-semibold text-gray-900 mb-2">Buat Surat Baru</h3>
-                            <p class="text-sm text-gray-600">Buat surat keluar dengan template</p>
+                            <h3 class="font-semibold text-neutral-900 mb-2">Buat Surat Baru</h3>
+                            <p class="text-sm text-neutral-600">Buat surat keluar dengan template</p>
                         </div>
                     </div>
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover-scale cursor-pointer" @click="currentPage = 'agenda-masuk-upload'">
+                    <div class="card p-6 hover:shadow-lg cursor-pointer" @click="currentPage = 'agenda-masuk-upload'">
                         <div class="text-center">
-                            <div class="p-4 bg-green-100 rounded-full inline-block mb-4">
-                                <i class="fas fa-upload text-green-600 text-2xl"></i>
+                            <div class="p-4 bg-secondary rounded-xl inline-block mb-4">
+                                <i class="fas fa-upload text-white text-2xl"></i>
                             </div>
-                            <h3 class="font-semibold text-gray-900 mb-2">Upload Surat Masuk</h3>
-                            <p class="text-sm text-gray-600">Upload surat masuk baru</p>
+                            <h3 class="font-semibold text-neutral-900 mb-2">Upload Surat Masuk</h3>
+                            <p class="text-sm text-neutral-600">Upload surat masuk baru</p>
                         </div>
                     </div>
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover-scale cursor-pointer" @click="currentPage = 'arsip-register'">
+                    <div class="card p-6 hover:shadow-lg cursor-pointer" @click="currentPage = 'arsip-register'">
                         <div class="text-center">
-                            <div class="p-4 bg-purple-100 rounded-full inline-block mb-4">
-                                <i class="fas fa-archive text-purple-600 text-2xl"></i>
+                            <div class="p-4 bg-accent rounded-xl inline-block mb-4">
+                                <i class="fas fa-archive text-white text-2xl"></i>
                             </div>
-                            <h3 class="font-semibold text-gray-900 mb-2">Register Arsip</h3>
-                            <p class="text-sm text-gray-600">Daftarkan dokumen ke arsip</p>
+                            <h3 class="font-semibold text-neutral-900 mb-2">Register Arsip</h3>
+                            <p class="text-sm text-neutral-600">Daftarkan dokumen ke arsip</p>
                         </div>
                     </div>
                 </div>
@@ -564,11 +747,11 @@
 
             <!-- Placeholder untuk halaman lain -->
             <div x-show="currentPage !== 'dashboard' && currentPage !== 'dashboard-quick'" x-cloak class="fade-in">
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-                    <i class="fas fa-tools text-6xl text-gray-400 mb-4"></i>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Halaman Sedang Dikembangkan</h3>
-                    <p class="text-gray-600 mb-4">Halaman <span x-text="currentPage" class="font-mono bg-gray-100 px-2 py-1 rounded"></span> sedang dalam pengembangan</p>
-                    <button @click="currentPage = 'dashboard'" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-8 text-center">
+                    <i class="fas fa-tools text-6xl text-neutral-400 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-neutral-900 mb-2">Halaman Sedang Dikembangkan</h3>
+                    <p class="text-neutral-600 mb-4">Halaman <span x-text="currentPage" class="font-mono bg-neutral-100 px-2 py-1 rounded"></span> sedang dalam pengembangan</p>
+                    <button @click="currentPage = 'dashboard'" class="btn-primary">
                         <i class="fas fa-arrow-left mr-2"></i>Kembali ke Dashboard
                     </button>
                 </div>
@@ -600,8 +783,8 @@
                             datasets: [{
                                 label: 'Surat Masuk',
                                 data: [12, 19, 15, 25, 22, 24],
-                                borderColor: 'rgb(59, 130, 246)',
-                                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                borderColor: 'rgb(99, 102, 241)',
+                                backgroundColor: 'rgba(99, 102, 241, 0.1)',
                                 tension: 0.4
                             }, {
                                 label: 'Surat Keluar',
@@ -633,7 +816,7 @@
                             datasets: [{
                                 data: [30, 25, 20, 15, 10],
                                 backgroundColor: [
-                                    'rgb(59, 130, 246)',
+                                    'rgb(99, 102, 241)',
                                     'rgb(34, 197, 94)',
                                     'rgb(168, 85, 247)',
                                     'rgb(251, 146, 60)',
