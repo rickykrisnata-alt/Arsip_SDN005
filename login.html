@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id" x-data="loginForm()">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistem Kearsipan Surat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        [x-cloak] { display: none !important; }
+        .bg-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gradient min-h-screen flex items-center justify-center px-4">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 rounded-full opacity-20 blur-3xl"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-300 rounded-full opacity-20 blur-3xl"></div>
+    </div>
+
+    <!-- Login Container -->
+    <div class="relative w-full max-w-md">
+        <div class="glass-effect rounded-2xl shadow-2xl p-8 fade-in">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
+                    <i class="fas fa-school text-white text-2xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-900 mb-2">Sistem Kearsipan Surat</h1>
+                <p class="text-gray-600">SDN 005 - Aplikasi Manajemen Surat Digital</p>
+            </div>
+
+            <!-- Login Form -->
+            <form @submit.prevent="login()" class="space-y-6">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                        Email
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-envelope text-gray-400"></i>
+                        </div>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            x-model="form.email"
+                            required
+                            class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-colors"
+                            placeholder="nama@email.com"
+                        >
+                    </div>
+                </div>
+
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                        Password
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-lock text-gray-400"></i>
+                        </div>
+                        <input 
+                            :type="showPassword ? 'text' : 'password'" 
+                            id="password" 
+                            x-model="form.password"
+                            required
+                            class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-colors"
+                            placeholder="Masukkan password"
+                        >
+                        <button 
+                            type="button" 
+                            @click="showPassword = !showPassword"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                        >
+                            <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" class="text-gray-400 hover:text-gray-600"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remember Me & Forgot Password -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input 
+                            type="checkbox" 
+                            id="remember" 
+                            x-model="form.remember"
+                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        >
+                        <label for="remember" class="ml-2 block text-sm text-gray-700">
+                            Ingat saya
+                        </label>
+                    </div>
+                    <a href="#" class="text-sm text-blue-600 hover:text-blue-500">
+                        Lupa password?
+                    </a>
+                </div>
+
+                <!-- Error Message -->
+                <div x-show="errorMessage" x-cloak x-transition class="bg-red-50 border border-red-200 rounded-lg p-3">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
+                        <span class="text-sm text-red-700" x-text="errorMessage"></span>
+                    </div>
+                </div>
+
+                <!-- Success Message -->
+                <div x-show="successMessage" x-cloak x-transition class="bg-green-50 border border-green-200 rounded-lg p-3">
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                        <span class="text-sm text-green-700" x-text="successMessage"></span>
+                    </div>
+                </div>
+
+                <!-- Login Button -->
+                <button 
+                    type="submit" 
+                    :disabled="loading"
+                    class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center"
+                >
+                    <span x-show="!loading">Masuk</span>
+                    <span x-show="loading" class="flex items-center">
+                        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Memproses...
+                    </span>
+                </button>
+            </form>
+
+            <!-- Demo Accounts -->
+            <div class="mt-8 pt-6 border-t border-gray-200">
+                <p class="text-center text-sm text-gray-600 mb-4">Akun Demo:</p>
+                <div class="space-y-2">
+                    <button @click="fillDemo('admin')" class="w-full text-left px-3 py-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium">Admin</span>
+                            <span class="text-gray-500">admin@sdn005.sch.id / admin123</span>
+                        </div>
+                    </button>
+                    <button @click="fillDemo('pimpinan')" class="w-full text-left px-3 py-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium">Pimpinan</span>
+                            <span class="text-gray-500">kepsek@sdn005.sch.id / pimpinan123</span>
+                        </div>
+                    </button>
+                    <button @click="fillDemo('user')" class="w-full text-left px-3 py-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium">User</span>
+                            <span class="text-gray-500">user@sdn005.sch.id / user123</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-8 text-center">
+                <p class="text-xs text-gray-500">
+                    © 2026 SDN 005. Sistem Kearsipan Surat Digital v1.0
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loginForm() {
+            return {
+                form: {
+                    email: '',
+                    password: '',
+                    remember: false
+                },
+                showPassword: false,
+                loading: false,
+                errorMessage: '',
+                successMessage: '',
+
+                async login() {
+                    this.loading = true;
+                    this.errorMessage = '';
+                    this.successMessage = '';
+
+                    // Simulate API call
+                    setTimeout(() => {
+                        // Demo authentication logic
+                        const demoAccounts = {
+                            'admin@sdn005.sch.id': { password: 'admin123', role: 'admin', name: 'Administrator' },
+                            'kepsek@sdn005.sch.id': { password: 'pimpinan123', role: 'pimpinan', name: 'Kepala Sekolah' },
+                            'user@sdn005.sch.id': { password: 'user123', role: 'user', name: 'User' }
+                        };
+
+                        const account = demoAccounts[this.form.email];
+                        
+                        if (account && account.password === this.form.password) {
+                            this.successMessage = 'Login berhasil! Mengalihkan...';
+                            
+                            // Store session
+                            sessionStorage.setItem('user', JSON.stringify({
+                                email: this.form.email,
+                                role: account.role,
+                                name: account.name
+                            }));
+
+                            // Redirect to main page
+                            setTimeout(() => {
+                                window.location.href = 'index.html';
+                            }, 1500);
+                        } else {
+                            this.errorMessage = 'Email atau password salah. Silakan coba lagi.';
+                        }
+                        
+                        this.loading = false;
+                    }, 1500);
+                },
+
+                fillDemo(type) {
+                    const demoAccounts = {
+                        admin: { email: 'admin@sdn005.sch.id', password: 'admin123' },
+                        pimpinan: { email: 'kepsek@sdn005.sch.id', password: 'pimpinan123' },
+                        user: { email: 'user@sdn005.sch.id', password: 'user123' }
+                    };
+
+                    this.form.email = demoAccounts[type].email;
+                    this.form.password = demoAccounts[type].password;
+                    this.errorMessage = '';
+                    this.successMessage = '';
+                }
+            }
+        }
+
+        // Check if user is already logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = sessionStorage.getItem('user');
+            if (user) {
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>

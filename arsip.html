@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="id" x-data="{ sidebarOpen: false, currentPage: 'arsip', userRole: 'admin' }">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arsip - Sistem Kearsipan Surat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="assets/js/app.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        .sidebar-transition { transition: transform 0.3s ease-in-out; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hover-scale { transition: transform 0.2s; }
+        .hover-scale:hover { transform: scale(1.02); }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200 fixed top-0 left-0 right-0 z-40">
+        <div class="px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 lg:hidden">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <div class="flex-shrink-0 flex items-center ml-4 lg:ml-0">
+                        <i class="fas fa-school text-blue-600 text-2xl mr-3"></i>
+                        <div>
+                            <h1 class="text-xl font-bold text-gray-900">Sistem Kearsipan Surat</h1>
+                            <p class="text-xs text-gray-500">SDN 005</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="px-4 py-2 text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-arrow-left mr-2"></i>Kembali
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-16">
+        <div class="px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Page Header -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-900">Manajemen Arsip</h2>
+                <p class="text-gray-600">Kelola arsip surat dan dokumen penting</p>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover-scale">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-purple-100 rounded-lg">
+                            <i class="fas fa-archive text-purple-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500">Total Arsip</p>
+                            <p class="text-2xl font-bold text-gray-900">142</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover-scale">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-green-100 rounded-lg">
+                            <i class="fas fa-folder text-green-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500">Arsip Aktif</p>
+                            <p class="text-2xl font-bold text-gray-900">98</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover-scale">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-yellow-100 rounded-lg">
+                            <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500">Arsip Inaktif</p>
+                            <p class="text-2xl font-bold text-gray-900">44</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover-scale">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-red-100 rounded-lg">
+                            <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500">Perlu Retensi</p>
+                            <p class="text-2xl font-bold text-gray-900">12</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="border-b border-gray-200">
+                    <nav class="flex -mb-px">
+                        <button @click="activeTab = 'register'" :class="activeTab === 'register' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="py-2 px-6 border-b-2 font-medium text-sm">
+                            <i class="fas fa-plus-circle mr-2"></i>Register Arsip
+                        </button>
+                        <button @click="activeTab = 'daftar'" :class="activeTab === 'daftar' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="py-2 px-6 border-b-2 font-medium text-sm">
+                            <i class="fas fa-list mr-2"></i>Daftar Arsip
+                        </button>
+                        <button @click="activeTab = 'retensi'" :class="activeTab === 'retensi' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'" class="py-2 px-6 border-b-2 font-medium text-sm">
+                            <i class="fas fa-history mr-2"></i>Retensi
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Register Arsip Tab -->
+                <div x-show="activeTab === 'register'" x-cloak class="p-6">
+                    <form x-data="archiveForm()" @submit.prevent="saveArchive">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Surat</label>
+                                <input type="text" x-model="form.nomorSurat" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Judul Arsip</label>
+                                <input type="text" x-model="form.judul" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Kode Arsip</label>
+                                <select x-model="form.kodeArsip" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <option value="">-- Pilih Kode Arsip --</option>
+                                    <option value="100">100 - Surat Dinas</option>
+                                    <option value="200">200 - Surat Undangan</option>
+                                    <option value="300">300 - Surat Edaran</option>
+                                    <option value="400">400 - Surat Keputusan</option>
+                                    <option value="500">500 - Surat Pemberitahuan</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal</label>
+                                <input type="date" x-model="form.tanggal" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
+                                <textarea x-model="form.deskripsi" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Upload File</label>
+                                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors" @dragover.prevent @drop.prevent="handleFileDrop">
+                                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-3"></i>
+                                    <p class="text-gray-600 mb-2">Drag & drop file di sini atau klik untuk browse</p>
+                                    <input type="file" @change="handleFileSelect" class="hidden" id="archiveFile" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                                    <label for="archiveFile" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer inline-block">
+                                        Pilih File
+                                    </label>
+                                    <div x-show="files.length > 0" class="mt-4">
+                                        <template x-for="(file, index) in files" :key="index">
+                                            <div class="flex items-center justify-between bg-gray-50 p-2 rounded mt-2">
+                                                <span class="text-sm text-gray-700" x-text="file.name"></span>
+                                                <button type="button" @click="removeFile(index)" class="text-red-500 hover:text-red-700">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-3">
+                            <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                                Batal
+                            </button>
+                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                Simpan Arsip
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Daftar Arsip Tab -->
+                <div x-show="activeTab === 'daftar'" x-cloak class="p-6">
+                    <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+                        <div class="flex space-x-2">
+                            <input type="text" placeholder="Cari arsip..." class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <select class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option>Semua Kategori</option>
+                                <option>Surat Dinas</option>
+                                <option>Surat Undangan</option>
+                                <option>Surat Edaran</option>
+                            </select>
+                            <select class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option>Semua Status</option>
+                                <option>Aktif</option>
+                                <option>Inaktif</option>
+                            </select>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                            <button class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nomor Surat</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Judul</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode Arsip</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ARSIP001</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">023/SDN.005.TPTM/III/2026</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">Undangan Workshop Guru</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">900</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">15/03/2026</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Aktif</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button class="text-blue-600 hover:text-blue-900 mr-3">Detail</button>
+                                        <button class="text-green-600 hover:text-green-900 mr-3">Download</button>
+                                        <button class="text-gray-600 hover:text-gray-900">Edit</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">ARSIP002</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">422/ED/2026</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">Edaran Libur Semester</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">300</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">10/03/2026</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Aktif</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button class="text-blue-600 hover:text-blue-900 mr-3">Detail</button>
+                                        <button class="text-green-600 hover:text-green-900 mr-3">Download</button>
+                                        <button class="text-gray-600 hover:text-gray-900">Edit</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Retensi Tab -->
+                <div x-show="activeTab === 'retensi'" x-cloak class="p-6">
+                    <div class="mb-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Jadwal Retensi Arsip</h3>
+                        <p class="text-gray-600">Kelola jadwal retensi dan pemusnahan arsip sesuai ketentuan</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                            <div class="flex items-center mb-3">
+                                <i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>
+                                <h4 class="font-medium text-yellow-800">Perlu Evaluasi</h4>
+                            </div>
+                            <p class="text-sm text-yellow-700 mb-3">5 arsip akan mencapai batas retensi dalam 3 bulan</p>
+                            <button class="text-sm text-yellow-600 hover:text-yellow-800 font-medium">Lihat Detail →</button>
+                        </div>
+
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                            <div class="flex items-center mb-3">
+                                <i class="fas fa-clock text-red-600 mr-2"></i>
+                                <h4 class="font-medium text-red-800">Segera Retensi</h4>
+                            </div>
+                            <p class="text-sm text-red-700 mb-3">2 arsip sudah melewati batas retensi</p>
+                            <button class="text-sm text-red-600 hover:text-red-800 font-medium">Proses Sekarang →</button>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <h4 class="font-medium text-gray-900 mb-4">Jadwal Retensi</h4>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Arsip</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Retensi</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Batas Waktu</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Surat Undangan 2021</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Undangan</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">5 Tahun</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">31/12/2026</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Mendekati</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <button class="text-blue-600 hover:text-blue-900">Evaluasi</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function archiveForm() {
+            return {
+                form: {
+                    nomorSurat: '',
+                    judul: '',
+                    kodeArsip: '',
+                    tanggal: '',
+                    deskripsi: ''
+                },
+                files: [],
+                
+                handleFileDrop(e) {
+                    this.files = Array.from(e.dataTransfer.files);
+                },
+                
+                handleFileSelect(e) {
+                    this.files = Array.from(e.target.files);
+                },
+                
+                removeFile(index) {
+                    this.files.splice(index, 1);
+                },
+                
+                saveArchive() {
+                    alert('Arsip berhasil disimpan!');
+                    this.form = {
+                        nomorSurat: '',
+                        judul: '',
+                        kodeArsip: '',
+                        tanggal: '',
+                        deskripsi: ''
+                    };
+                    this.files = [];
+                }
+            }
+        }
+
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('archiveManagement', () => ({
+                activeTab: 'register'
+            }));
+        });
+    </script>
+</body>
+</html>

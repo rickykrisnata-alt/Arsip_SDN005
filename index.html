@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="id" x-data="{ sidebarOpen: false, currentPage: 'dashboard', userRole: 'user' }">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Kearsipan Surat - SDN 005</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="assets/js/app.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        .sidebar-transition { transition: transform 0.3s ease-in-out; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hover-scale { transition: transform 0.2s; }
+        .hover-scale:hover { transform: scale(1.02); }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200 fixed top-0 left-0 right-0 z-40">
+        <div class="px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 lg:hidden">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <div class="flex-shrink-0 flex items-center ml-4 lg:ml-0">
+                        <i class="fas fa-school text-blue-600 text-2xl mr-3"></i>
+                        <div>
+                            <h1 class="text-xl font-bold text-gray-900">Sistem Kearsipan Surat</h1>
+                            <p class="text-xs text-gray-500">SDN 005</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative" x-data="{ notificationOpen: false }">
+                        <button @click="notificationOpen = !notificationOpen" class="p-2 rounded-full text-gray-600 hover:text-gray-900 hover:bg-gray-100 relative">
+                            <i class="fas fa-bell text-lg"></i>
+                            <span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-400"></span>
+                        </button>
+                        <div x-show="notificationOpen" @click.away="notificationOpen = false" x-cloak
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 transform scale-95"
+                             x-transition:enter-end="opacity-100 transform scale-100"
+                             class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                            <div class="p-4 border-b border-gray-200">
+                                <h3 class="text-sm font-medium text-gray-900">Notifikasi</h3>
+                            </div>
+                            <div class="max-h-64 overflow-y-auto">
+                                <div class="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100">
+                                    <p class="text-sm text-gray-900">Surat masuk baru dari Dinas Pendidikan</p>
+                                    <p class="text-xs text-gray-500 mt-1">2 jam yang lalu</p>
+                                </div>
+                                <div class="p-3 hover:bg-gray-50 cursor-pointer">
+                                    <p class="text-sm text-gray-900">Template surat baru ditambahkan</p>
+                                    <p class="text-xs text-gray-500 mt-1">1 hari yang lalu</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative" x-data="{ profileOpen: false }">
+                        <button @click="profileOpen = !profileOpen" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100">
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                <span class="text-white text-sm font-medium" x-text="userRole === 'admin' ? 'A' : userRole === 'pimpinan' ? 'P' : 'U'"></span>
+                            </div>
+                            <span class="hidden md:block text-sm font-medium text-gray-700" x-text="userRole === 'admin' ? 'Admin' : userRole === 'pimpinan' ? 'Pimpinan' : 'User'"></span>
+                            <i class="fas fa-chevron-down text-xs text-gray-500"></i>
+                        </button>
+                        <div x-show="profileOpen" @click.away="profileOpen = false" x-cloak
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 transform scale-95"
+                             x-transition:enter-end="opacity-100 transform scale-100"
+                             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-user mr-2"></i> Profil
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-cog mr-2"></i> Pengaturan
+                            </a>
+                            <hr class="my-1">
+                            <a href="#" @click="logout()" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Keluar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside x-show="sidebarOpen" 
+           x-cloak
+           x-transition:enter="transition ease-out duration-200"
+           x-transition:enter-start="opacity-0 transform -translate-x-full"
+           x-transition:enter-end="opacity-100 transform translate-x-0"
+           x-transition:leave="transition ease-in duration-200"
+           x-transition:leave-start="opacity-100 transform translate-x-0"
+           x-transition:leave-end="opacity-0 transform -translate-x-full"
+           class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl border-r border-gray-200 lg:hidden"
+           @click.away="sidebarOpen = false">
+        <div class="flex flex-col h-full pt-16">
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <template x-for="item in menuItems" :key="item.id">
+                    <a href="#" @click="currentPage = item.id; sidebarOpen = false"
+                       :class="currentPage === item.id ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700' : 'text-gray-700 hover:bg-gray-100'"
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors"
+                       x-show="item.roles.includes(userRole)">
+                        <i :class="item.icon" class="mr-3 w-5"></i>
+                        <span x-text="item.name"></span>
+                    </a>
+                </template>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Desktop Sidebar -->
+    <aside class="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-30 lg:w-64 lg:bg-white lg:border-r lg:border-gray-200">
+        <div class="flex flex-col h-full pt-16">
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <template x-for="item in menuItems" :key="item.id">
+                    <a href="#" @click="currentPage = item.id"
+                       :class="currentPage === item.id ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700' : 'text-gray-700 hover:bg-gray-100'"
+                       class="flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors"
+                       x-show="item.roles.includes(userRole)">
+                        <i :class="item.icon" class="mr-3 w-5"></i>
+                        <span x-text="item.name"></span>
+                    </a>
+                </template>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="lg:pl-64 pt-16">
+        <div class="px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Dashboard Page -->
+            <div x-show="currentPage === 'dashboard'" x-cloak class="fade-in">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900">Dashboard</h2>
+                    <p class="text-gray-600">Ringkasan statistik kearsipan surat</p>
+                </div>
+
+                <!-- Quick Access Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover-scale">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-blue-100 rounded-lg">
+                                <i class="fas fa-envelope text-blue-600 text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-500">Surat Masuk</p>
+                                <p class="text-2xl font-bold text-gray-900">24</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover-scale">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-green-100 rounded-lg">
+                                <i class="fas fa-paper-plane text-green-600 text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-500">Surat Keluar</p>
+                                <p class="text-2xl font-bold text-gray-900">18</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover-scale">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-purple-100 rounded-lg">
+                                <i class="fas fa-archive text-purple-600 text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-500">Total Arsip</p>
+                                <p class="text-2xl font-bold text-gray-900">142</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover-scale">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-orange-100 rounded-lg">
+                                <i class="fas fa-clock text-orange-600 text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-500">Menunggu Disposisi</p>
+                                <p class="text-2xl font-bold text-gray-900">5</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Grafik Surat Masuk/Keluar</h3>
+                        <canvas id="letterChart" width="400" height="200"></canvas>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Statistik per Kategori</h3>
+                        <canvas id="categoryChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buat Surat Page -->
+            <div x-show="currentPage === 'buat-surat'" x-cloak class="fade-in">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900">Buat Surat</h2>
+                    <p class="text-gray-600">Buat surat keluar dengan template yang tersedia</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <form x-data="letterForm()">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Template</label>
+                                <select x-model="form.template" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <option value="">-- Pilih Template --</option>
+                                    <option value="surat-undangan">Surat Undangan</option>
+                                    <option value="surat-edaran">Surat Edaran</option>
+                                    <option value="surat-pemberitahuan">Surat Pemberitahuan</option>
+                                    <option value="surat-pengantar">Surat Pengantar</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Kode Arsip</label>
+                                <select x-model="form.kodeArsip" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <option value="">-- Pilih Kode Arsip --</option>
+                                    <option value="400.1.1">400.1.1 - Surat Undangan</option>
+                                    <option value="400.2.1">400.2.1 - Surat Edaran</option>
+                                    <option value="400.3.1">400.3.1 - Surat Pemberitahuan</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Surat (Auto Generate)</label>
+                                <input type="text" x-model="generatedNomorSurat" readonly class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Surat</label>
+                                <input type="date" x-model="form.tanggalSurat" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Perihal</label>
+                                <input type="text" x-model="form.perihal" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tujuan</label>
+                                <input type="text" x-model="form.tujuan" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Isi Surat</label>
+                                <textarea x-model="form.isiSurat" rows="8" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-end space-x-3">
+                            <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                                Batal
+                            </button>
+                            <button type="button" @click="generateNomorSurat()" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                                Generate Nomor
+                            </button>
+                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                Simpan & Cetak
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Agenda Surat Masuk Page -->
+            <div x-show="currentPage === 'agenda-masuk'" x-cloak class="fade-in">
+                <div class="mb-8 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Agenda Surat Masuk</h2>
+                        <p class="text-gray-600">Kelola surat masuk dan disposisi</p>
+                    </div>
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        <i class="fas fa-plus mr-2"></i>Upload Surat
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="p-4 border-b border-gray-200">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+                            <div class="flex space-x-2">
+                                <input type="text" placeholder="Cari surat..." class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <select class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <option>Semua Kategori</option>
+                                    <option>Undangan</option>
+                                    <option>Edaran</option>
+                                    <option>Pemberitahuan</option>
+                                </select>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                    <i class="fas fa-filter"></i>
+                                </button>
+                                <button class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No Surat</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Asal</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Perihal</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Disposisi</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">15/03/2026</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">421/2026</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Dinas Pendidikan</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">Undangan Rapat Koordinasi</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Menunggu</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button class="text-blue-600 hover:text-blue-900 mr-3">Detail</button>
+                                        <button class="text-green-600 hover:text-green-900 mr-3">Disposisi</button>
+                                        <button class="text-gray-600 hover:text-gray-900">Download</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">14/03/2026</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">420/2026</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Kepala Sekolah</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">Edaran Libur Semester</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Selesai</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button class="text-blue-600 hover:text-blue-900 mr-3">Detail</button>
+                                        <button class="text-gray-600 hover:text-gray-900">Download</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other pages will be added similarly -->
+        </div>
+    </main>
+
+    <script>
+        // Menu configuration
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('app', () => ({
+                menuItems: [
+                    { id: 'dashboard', name: 'Dashboard', icon: 'fas fa-tachometer-alt', roles: ['admin', 'pimpinan', 'user'] },
+                    { id: 'buat-surat', name: 'Buat Surat', icon: 'fas fa-plus-circle', roles: ['admin', 'user'] },
+                    { id: 'agenda-masuk', name: 'Agenda Surat Masuk', icon: 'fas fa-envelope-open', roles: ['admin', 'pimpinan', 'user'] },
+                    { id: 'agenda-keluar', name: 'Agenda Surat Keluar', icon: 'fas fa-paper-plane', roles: ['admin', 'pimpinan', 'user'] },
+                    { id: 'arsip', name: 'Arsip', icon: 'fas fa-archive', roles: ['admin', 'pimpinan', 'user'] },
+                    { id: 'template', name: 'Template Surat', icon: 'fas fa-file-alt', roles: ['admin'] },
+                    { id: 'pengguna', name: 'Pengguna', icon: 'fas fa-users', roles: ['admin'] },
+                    { id: 'tentang', name: 'Tentang', icon: 'fas fa-info-circle', roles: ['admin', 'pimpinan', 'user'] },
+                ],
+                logout() {
+                    if(confirm('Apakah Anda yakin ingin keluar?')) {
+                        window.location.href = 'login.html';
+                    }
+                }
+            }));
+
+            Alpine.data('letterForm', () => ({
+                form: {
+                    template: '',
+                    kodeArsip: '',
+                    tanggalSurat: '',
+                    perihal: '',
+                    tujuan: '',
+                    isiSurat: ''
+                },
+                generatedNomorSurat: '',
+                generateNomorSurat() {
+                    // Simulate API call to generate letter number
+                    const today = new Date();
+                    const month = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'][today.getMonth()];
+                    const year = today.getFullYear();
+                    const randomNum = Math.floor(Math.random() * 900) + 100;
+                    
+                    this.generatedNomorSurat = `${this.form.kodeArsip || '400.1.1'}/${randomNum}/SDN.005.TPTM/${month}/${year}`;
+                }
+            }));
+        });
+
+        // Initialize charts when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Letter Chart
+            const letterCtx = document.getElementById('letterChart');
+            if(letterCtx) {
+                new Chart(letterCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+                        datasets: [{
+                            label: 'Surat Masuk',
+                            data: [12, 19, 15, 25, 22, 24],
+                            borderColor: 'rgb(59, 130, 246)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            tension: 0.4
+                        }, {
+                            label: 'Surat Keluar',
+                            data: [8, 12, 10, 14, 18, 18],
+                            borderColor: 'rgb(34, 197, 94)',
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Category Chart
+            const categoryCtx = document.getElementById('categoryChart');
+            if(categoryCtx) {
+                new Chart(categoryCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Undangan', 'Edaran', 'Pemberitahuan', 'Pengantar', 'Lainnya'],
+                        datasets: [{
+                            data: [30, 25, 20, 15, 10],
+                            backgroundColor: [
+                                'rgb(59, 130, 246)',
+                                'rgb(34, 197, 94)',
+                                'rgb(168, 85, 247)',
+                                'rgb(251, 146, 60)',
+                                'rgb(107, 114, 128)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

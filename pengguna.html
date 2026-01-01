@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="id" x-data="{ sidebarOpen: false, currentPage: 'pengguna', userRole: 'admin' }">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Pengguna - Sistem Kearsipan Surat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="assets/js/app.js"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        .sidebar-transition { transition: transform 0.3s ease-in-out; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hover-scale { transition: transform 0.2s; }
+        .hover-scale:hover { transform: scale(1.02); }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Header (same as main index.html) -->
+    <header class="bg-white shadow-sm border-b border-gray-200 fixed top-0 left-0 right-0 z-40">
+        <div class="px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 lg:hidden">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <div class="flex-shrink-0 flex items-center ml-4 lg:ml-0">
+                        <i class="fas fa-school text-blue-600 text-2xl mr-3"></i>
+                        <div>
+                            <h1 class="text-xl font-bold text-gray-900">Sistem Kearsipan Surat</h1>
+                            <p class="text-xs text-gray-500">SDN 005</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="px-4 py-2 text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-arrow-left mr-2"></i>Kembali
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-16">
+        <div class="px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Page Header -->
+            <div class="mb-8 flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900">Manajemen Pengguna</h2>
+                    <p class="text-gray-600">Kelola akun pengguna sistem</p>
+                </div>
+                <button @click="showAddUserModal = true" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    <i class="fas fa-plus mr-2"></i>Tambah Pengguna
+                </button>
+            </div>
+
+            <!-- Users Table -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="p-4 border-b border-gray-200">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+                        <div class="flex space-x-2">
+                            <input type="text" x-model="searchQuery" @input="filterUsers" placeholder="Cari pengguna..." class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <select x-model="roleFilter" @change="filterUsers" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">Semua Role</option>
+                                <option value="admin">Admin</option>
+                                <option value="pimpinan">Pimpinan</option>
+                                <option value="user">User</option>
+                            </select>
+                        </div>
+                        <button class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                            <i class="fas fa-download mr-2"></i>Export
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jabatan</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <template x-for="user in filteredUsers" :key="user.no">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="user.no"></td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <div class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center">
+                                                    <span class="text-white font-medium" x-text="user.nama.charAt(0)"></span>
+                                                </div>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900" x-text="user.nama"></div>
+                                                <div class="text-sm text-gray-500" x-text="user.nip"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="user.email"></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="user.jabatan"></td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span :class="{
+                                            'px-2 py-1 text-xs rounded-full': true,
+                                            'bg-purple-100 text-purple-800': user.role === 'admin',
+                                            'bg-green-100 text-green-800': user.role === 'pimpinan',
+                                            'bg-blue-100 text-blue-800': user.role === 'user'
+                                        }" x-text="user.role.toUpperCase()"></span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span :class="{
+                                            'px-2 py-1 text-xs rounded-full': true,
+                                            'bg-green-100 text-green-800': user.status === 'Aktif',
+                                            'bg-red-100 text-red-800': user.status === 'Tidak Aktif'
+                                        }" x-text="user.status"></span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button @click="editUser(user)" class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
+                                        <button @click="deleteUser(user)" class="text-red-600 hover:text-red-900">Hapus</button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add/Edit User Modal -->
+    <div x-show="showAddUserModal" x-cloak 
+         class="fixed inset-0 z-50 overflow-y-auto"
+         aria-labelledby="modal-title"
+         role="dialog"
+         aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="showAddUserModal = false"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <form @submit.prevent="saveUser">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <div class="mb-4">
+                            <h3 class="text-lg font-medium text-gray-900" x-text="editingUser ? 'Edit Pengguna' : 'Tambah Pengguna Baru'"></h3>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
+                                <input type="text" x-model="userForm.nama" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input type="email" x-model="userForm.email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">NIP/NIPPPK</label>
+                                <input type="text" x-model="userForm.nip" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Jabatan</label>
+                                <input type="text" x-model="userForm.jabatan" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
+                                <select x-model="userForm.role" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <option value="">Pilih Role</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="pimpinan">Pimpinan</option>
+                                    <option value="user">User</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Pangkat/Golongan</label>
+                                <input type="text" x-model="userForm.pangkat" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div x-show="!editingUser">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                                <input type="password" x-model="userForm.password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                                <select x-model="userForm.status" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <option value="Aktif">Aktif</option>
+                                    <option value="Tidak Aktif">Tidak Aktif</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                        <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
+                            <span x-text="editingUser ? 'Update' : 'Simpan'"></span>
+                        </button>
+                        <button type="button" @click="closeUserModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                            Batal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('userManagement', () => ({
+                users: [
+                    { no: 1, nama: 'Administrator Sistem', email: 'admin@sdn005.sch.id', nip: '198001012005011001', jabatan: 'Kepala Sekolah', role: 'admin', pangkat: 'IV/a', status: 'Aktif' },
+                    { no: 2, nama: 'Dr. Budi Santoso, M.Pd', email: 'kepsek@sdn005.sch.id', nip: '197503152000031001', jabatan: 'Kepala Sekolah', role: 'pimpinan', pangkat: 'IV/a', status: 'Aktif' },
+                    { no: 3, nama: 'Siti Aminah, S.Pd', email: 'wakasek@sdn005.sch.id', nip: '198005122005012001', jabatan: 'Wakil Kepala Sekolah', role: 'pimpinan', pangkat: 'IV/a', status: 'Aktif' },
+                    { no: 4, nama: 'Ahmad Wijaya', email: 'staff@sdn005.sch.id', nip: '198508152010011001', jabatan: 'Staff Tata Usaha', role: 'user', pangkat: 'III/c', status: 'Aktif' },
+                    { no: 5, nama: 'Dewi Lestari', email: 'guru1@sdn005.sch.id', nip: '198702102009022001', jabatan: 'Guru Kelas', role: 'user', pangkat: 'III/b', status: 'Aktif' }
+                ],
+                filteredUsers: [],
+                searchQuery: '',
+                roleFilter: '',
+                showAddUserModal: false,
+                editingUser: null,
+                userForm: {
+                    nama: '',
+                    email: '',
+                    nip: '',
+                    jabatan: '',
+                    role: '',
+                    pangkat: '',
+                    password: '',
+                    status: 'Aktif'
+                },
+
+                init() {
+                    this.filteredUsers = this.users;
+                },
+
+                filterUsers() {
+                    this.filteredUsers = this.users.filter(user => {
+                        const matchesSearch = !this.searchQuery || 
+                            user.nama.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                            user.email.toLowerCase().includes(this.searchQuery.toLowerCase());
+                        
+                        const matchesRole = !this.roleFilter || user.role === this.roleFilter;
+                        
+                        return matchesSearch && matchesRole;
+                    });
+                },
+
+                editUser(user) {
+                    this.editingUser = user;
+                    this.userForm = { ...user, password: '' };
+                    this.showAddUserModal = true;
+                },
+
+                deleteUser(user) {
+                    if (confirm(`Apakah Anda yakin ingin menghapus pengguna "${user.nama}"?`)) {
+                        this.users = this.users.filter(u => u.no !== user.no);
+                        this.filterUsers();
+                        alert('Pengguna berhasil dihapus');
+                    }
+                },
+
+                saveUser() {
+                    if (this.editingUser) {
+                        // Update existing user
+                        const index = this.users.findIndex(u => u.no === this.editingUser.no);
+                        if (index !== -1) {
+                            this.users[index] = { ...this.userForm, no: this.editingUser.no };
+                        }
+                        alert('Pengguna berhasil diupdate');
+                    } else {
+                        // Add new user
+                        const newUser = {
+                            ...this.userForm,
+                            no: Math.max(...this.users.map(u => u.no)) + 1
+                        };
+                        this.users.push(newUser);
+                        alert('Pengguna berhasil ditambahkan');
+                    }
+                    
+                    this.closeUserModal();
+                    this.filterUsers();
+                },
+
+                closeUserModal() {
+                    this.showAddUserModal = false;
+                    this.editingUser = null;
+                    this.userForm = {
+                        nama: '',
+                        email: '',
+                        nip: '',
+                        jabatan: '',
+                        role: '',
+                        pangkat: '',
+                        password: '',
+                        status: 'Aktif'
+                    };
+                }
+            }));
+        });
+    </script>
+</body>
+</html>
