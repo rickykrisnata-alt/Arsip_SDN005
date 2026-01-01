@@ -125,6 +125,14 @@
             color: #334155;
         }
 
+        /* Card styles */
+        .card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: all 0.2s ease-in-out;
+        }
+
         /* Print styles */
         @media print {
             .no-print { display: none !important; }
@@ -953,8 +961,322 @@
                 </div>
             </div>
 
+            <!-- Template Register Page -->
+            <div x-show="currentPage === 'template-register'" x-cloak class="fade-in">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900">Register Template</h2>
+                    <p class="text-gray-600">Buat template surat baru untuk digunakan di sistem</p>
+                </div>
+
+                <div class="max-w-4xl mx-auto">
+                    <div class="bg-white rounded-xl shadow-sm border-gray-200 p-8">
+                        <form @submit.prevent="registerTemplate()">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Left Column -->
+                                <div class="space-y-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Nama Template *</label>
+                                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="templateForm.nama" placeholder="Masukkan nama template" required>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Kategori *</label>
+                                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="templateForm.kategori" required>
+                                            <option value="">-- Pilih Kategori --</option>
+                                            <option value="Undangan">Undangan</option>
+                                            <option value="Pemberitahuan">Pemberitahuan</option>
+                                            <option value="Edaran">Edaran</option>
+                                            <option value="Pengantar">Pengantar</option>
+                                            <option value="Keterangan">Keterangan</option>
+                                            <option value="Lainnya">Lainnya</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Variabel Template</label>
+                                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="templateForm.variables" placeholder="Contoh: {{nomorSurat}}, {{tanggal}}, {{perihal}}">
+                                        <p class="text-xs text-gray-500 mt-1">Gunakan format {{variable}} untuk variabel yang akan diganti otomatis</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="templateForm.status">
+                                            <option value="Aktif">Aktif</option>
+                                            <option value="Draft">Draft</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- Right Column -->
+                                <div class="space-y-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Konten Template</label>
+                                        <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="templateForm.content" rows="12" placeholder="Masukkan konten template dengan variabel"></textarea>
+                                        <p class="text-xs text-gray-500 mt-1">Gunakan variabel seperti {{nomorSurat}}, {{tanggal}}, {{perihal}} yang akan diganti otomatis</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Upload File Template (Opsional)</label>
+                                        <input type="file" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" @change="handleTemplateFileUpload($event)" accept=".doc,.docx,.pdf">
+                                        <p class="text-xs text-gray-500 mt-1">Upload file template yang sudah ada (doc, docx, pdf)</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
+                                        <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="templateForm.deskripsi" rows="3" placeholder="Deskripsi template"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Actions -->
+                            <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+                                <button type="button" @click="resetTemplateForm()" class="btn-secondary">
+                                    <i class="fas fa-times mr-2"></i>
+                                    Reset
+                                </button>
+                                <button type="submit" class="btn-primary" :disabled="loading">
+                                    <i class="fas fa-save mr-2" x-show="!loading"></i>
+                                    <i class="fas fa-spinner fa-spin mr-2" x-show="loading"></i>
+                                    <span x-text="loading ? 'Menyimpan...' : 'Register Template'"></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Template List Page -->
+            <div x-show="currentPage === 'template-list'" x-cloak class="fade-in">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900">Daftar Template</h2>
+                    <p class="text-gray-600">Kelola semua template surat yang tersedia</p>
+                </div>
+
+                <!-- Search and Filter -->
+                <div class="bg-white rounded-xl shadow-sm border-gray-200 p-6 mb-8">
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <div class="flex-1">
+                            <div class="relative">
+                                <input type="text" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="searchQuery" placeholder="Cari template...">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-search text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="filterKategori">
+                                <option value="">Semua Kategori</option>
+                                <option value="Undangan">Undangan</option>
+                                <option value="Pemberitahuan">Pemberitahuan</option>
+                                <option value="Edaran">Edaran</option>
+                                <option value="Pengantar">Pengantar</option>
+                                <option value="Keterangan">Keterangan</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div>
+                            <button @click="refreshTemplates()" class="btn-secondary">
+                                <i class="fas fa-sync-alt mr-2"></i>
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-xl shadow-sm border-gray-200 p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-blue-100 rounded-lg mr-4">
+                                <i class="fas fa-file-alt text-blue-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-gray-900" x-text="templateStats.total || 0"></p>
+                                <p class="text-sm text-gray-600">Total Template</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border-gray-200 p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-green-100 rounded-lg mr-4">
+                                <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-gray-900" x-text="templateStats.aktif || 0"></p>
+                                <p class="text-sm text-gray-600">Template Aktif</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border-gray-200 p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-yellow-100 rounded-lg mr-4">
+                                <i class="fas fa-edit text-yellow-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-gray-900" x-text="templateStats.draft || 0"></p>
+                                <p class="text-sm text-gray-600">Template Draft</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border-gray-200 p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-purple-100 rounded-lg mr-4">
+                                <i class="fas fa-clock text-purple-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-gray-900" x-text="templateStats.recent || 0"></p>
+                                <p class="text-sm text-gray-600">Dibuat 7 Hari Terakhir</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Templates Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <template x-for="template in filteredTemplates" :key="template.id">
+                        <div class="bg-white rounded-xl shadow-sm border-gray-200 p-6 hover:shadow-lg transition-shadow">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900" x-text="template.nama"></h3>
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium" :class="template.status === 'Aktif' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'" x-text="template.status"></span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button @click="editTemplate(template)" class="text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button @click="deleteTemplate(template)" class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-2">
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-folder mr-2"></i>
+                                    <span x-text="template.kategori"></span>
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-calendar mr-2"></i>
+                                    <span x-text="template.createdAt"></span>
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-clock mr-2"></i>
+                                    <span x-text="template.updatedAt"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="pt-4 border-t border-gray-200">
+                                <p class="text-sm text-gray-600 line-clamp" x-text="template.deskripsi || 'Tidak ada deskripsi'"></p>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Empty State -->
+                <div x-show="filteredTemplates.length === 0" class="text-center py-12">
+                    <i class="fas fa-file-alt text-6xl text-gray-400 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Tidak Ada Template</h3>
+                    <p class="text-gray-600">Belum ada template yang terdaftar</p>
+                    <button @click="currentPage = 'template-register'" class="btn-primary mt-4">
+                        <i class="fas fa-plus mr-2"></i>
+                        Buat Template Pertama
+                    </button>
+                </div>
+            </div>
+
+            <!-- Template Edit Page -->
+            <div x-show="currentPage === 'template-edit'" x-cloak class="fade-in">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900">Edit Template</h2>
+                    <p class="text-gray-600">Edit template yang sudah ada</p>
+                </div>
+
+                <div class="max-w-4xl mx-auto">
+                    <div class="bg-white rounded-xl shadow-sm border-gray-200 p-8">
+                        <form @submit.prevent="updateTemplate()">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Left Column -->
+                                <div class="space-y-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Nama Template *</label>
+                                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="editTemplateForm.nama" placeholder="Masukkan nama template" required>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Kategori *</label>
+                                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="editTemplateForm.kategori" required>
+                                            <option value="">-- Pilih Kategori --</option>
+                                            <option value="Undangan">Undangan</option>
+                                            <option value="Pemberitahuan">Pemberitahuan</option>
+                                            <option value="Edaran">Edaran</option>
+                                            <option value="Pengantar">Pengantar</option>
+                                            <option value="Keterangan">Keterangan</option>
+                                            <option value="Lainnya">Lainnya</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Variabel Template</label>
+                                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="editTemplateForm.variables" placeholder="Contoh: {{nomorSurat}}, {{tanggal}}, {{perihal}}">
+                                        <p class="text-xs text-gray-500 mt-1">Gunakan format {{variable}} untuk variabel yang akan diganti otomatis</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="editTemplateForm.status">
+                                            <option value="Aktif">Aktif</option>
+                                            <option value="Draft">Draft</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- Right Column -->
+                                <div class="space-y-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Konten Template</label>
+                                        <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="editTemplateForm.content" rows="12" placeholder="Masukkan konten template dengan variabel"></textarea>
+                                        <p class="text-xs text-gray-500 mt-1">Gunakan variabel seperti {{nomorSurat}}, {{tanggal}}, {{perihal}} yang akan diganti otomatis</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Upload File Template (Opsional)</label>
+                                        <input type="file" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" @change="handleEditTemplateFileUpload($event)" accept=".doc,.docx,.pdf">
+                                        <p class="text-xs text-gray-500 mt-1">Upload file template yang sudah ada (doc, docx, pdf)</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
+                                        <textarea class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="editTemplateForm.deskripsi" rows="3" placeholder="Deskripsi template"></textarea>
+                                    </div>
+                                    
+                                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                        <p class="text-sm text-blue-800">
+                                            <i class="fas fa-info-circle mr-2"></i>
+                                            <strong>Info:</strong> Template akan otomatis dibuatkan di Google Docs untuk digunakan dalam sistem.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Actions -->
+                            <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+                                <button type="button" @click="cancelEditTemplate()" class="btn-secondary">
+                                    <i class="fas fa-times mr-2"></i>
+                                    Batal
+                                </button>
+                                <button type="submit" class="btn-primary" :disabled="loading">
+                                    <i class="fas fa-save mr-2" x-show="!loading"></i>
+                                    <i class="fas fa-spinner fa-spin mr-2" x-show="loading"></i>
+                                    <span x-text="loading ? 'Menyimpan...' : 'Update Template'"></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <!-- Placeholder untuk halaman lain -->
-            <div x-show="currentPage !== 'dashboard' && currentPage !== 'buat-surat-keluar'" x-cloak class="fade-in">
+            <div x-show="currentPage !== 'dashboard' && currentPage !== 'buat-surat-keluar' && currentPage !== 'template-register' && currentPage !== 'template-list' && currentPage !== 'template-edit'" x-cloak class="fade-in">
                 <div class="bg-white rounded-xl shadow-sm border-gray-200 p-8 text-center">
                     <i class="fas fa-tools text-6xl text-gray-400 mb-4"></i>
                     <h3 class="text-xl font-semibold text-gray-900 mb-4">Halaman Sedang Dikembangkan</h3>
@@ -1017,10 +1339,44 @@
                     file: null
                 },
                 
+                // Template forms
+                templateForm: {
+                    nama: '',
+                    kategori: '',
+                    variables: '',
+                    content: '',
+                    deskripsi: '',
+                    status: 'Aktif',
+                    file: null
+                },
+                
+                editTemplateForm: {
+                    id: '',
+                    nama: '',
+                    kategori: '',
+                    variables: '',
+                    content: '',
+                    deskripsi: '',
+                    status: 'Aktif',
+                    file: null
+                },
+                
                 // Data dari database
                 suratTemplates: [],
                 
                 kodeArsipOptions: [],
+                
+                // Search and filter
+                searchQuery: '',
+                filterKategori: '',
+                
+                // Statistics
+                templateStats: {
+                    total: 0,
+                    aktif: 0,
+                    draft: 0,
+                    recent: 0
+                },
                 
                 notification: {
                     show: false,
@@ -1030,6 +1386,9 @@
                 
                 // API Configuration
                 apiBase: 'https://script.google.com/macros/s/AKfycbxtLfyDfzhDiQvU2saKpU0zIRPQKCQyj46Fs4tLK7r8nt3LoHNSbMFd0vRkYXavSJfc/exec',
+                
+                // Current editing template
+                currentEditingTemplate: null,
                 
                 // Init
                 init() {
@@ -1054,6 +1413,7 @@
                         if (response.status === 'success' && response.data) {
                             this.suratTemplates = response.data;
                             console.log('Templates loaded successfully:', this.suratTemplates.length);
+                            this.updateTemplateStats();
                         }
                     } catch (error) {
                         console.log('API failed, using fallback templates');
@@ -1064,38 +1424,59 @@
                                 nama: 'Undangan Rapat',
                                 kategori: 'Undangan',
                                 variables: ['{{nomorSurat}}', '{{tanggal}}', '{{perihal}}', '{{tujuan}}', '{{namaKegiatan}}', '{{waktu}}', '{{tempat}}'],
-                                content: 'Berdasarkan hasil rapat kami akan mengadakan kegiatan {{namaKegiatan}} pada:\n\nWaktu: {{waktu}}\nTempat: {{tempat}}\n\nDemikian undangan ini kami sampaikan, atas perhatian dan kehadirannya kami ucapkan terima kasih.'
+                                content: 'Berdasarkan hasil rapat kami akan mengadakan kegiatan {{namaKegiatan}} pada:\n\nWaktu: {{waktu}}\nTempat: {{tempat}}\n\nDemikian undangan ini kami sampaikan, atas perhatian dan kehadirannya kami ucapkan terima kasih.',
+                                status: 'Aktif',
+                                createdAt: '2024-01-01',
+                                updatedAt: '2024-01-01',
+                                deskripsi: 'Template undangan rapat untuk kegiatan sekolah'
                             },
                             {
                                 id: 'pemberitahuan',
                                 nama: 'Pemberitahuan',
                                 kategori: 'Pemberitahuan',
                                 variables: ['{{nomorSurat}}', '{{tanggal}}', '{{perihal}}', '{{tujuan}}'],
-                                content: 'Dengan hormat,\n\nBersama ini kami sampaikan pemberitahuan {{perihal}} kepada {{tujuan}}.\n\nPemberitahuan ini berlaku efektif sejak tanggal ditetapkan.\n\nDemikian pemberitahuan ini kami sampaikan, atas perhatian dan kerjasamanya kami ucapkan terima kasih.'
+                                content: 'Dengan hormat,\n\nBersama ini kami sampaikan pemberitahuan {{perihal}} kepada {{tujuan}}.\n\nPemberitahuan ini berlaku efektif sejak tanggal ditetapkan.\n\nDemikian pemberitahuan ini kami sampaikan, atas perhatian dan kerjasamanya kami ucapkan terima kasih.',
+                                status: 'Aktif',
+                                createdAt: '2024-01-01',
+                                updatedAt: '2024-01-01',
+                                deskripsi: 'Template pemberitahuan umum untuk berbagai keperluan'
                             },
                             {
                                 id: 'edaran',
                                 nama: 'Edaran',
                                 kategori: 'Edaran',
                                 variables: ['{{nomorSurat}}', '{{tanggal}}', '{{perihal}}', '{{tujuan}}'],
-                                content: 'Assalamualaikum Wr. Wb.\n\nBismillahirrahmanirrahim\n\nSehubungan dengan {{perihal}}, kami edarkan kepada {{tujuan}} untuk memperhatikan hal-hal sebagai berikut:\n\n1. [Isi edaran]\n2. [Isi edaran]\n3. [Isi edaran]\n\nDemikian edaran ini kami sampaikan untuk diindahkan dan dilaksanakan sebagaimana mestinya.\n\nWassalamualaikum Wr. Wb.'
+                                content: 'Assalamualaikum Wr. Wb.\n\nBismillahirrahmanirrahim\n\nSehubungan dengan {{perihal}}, kami edarkan kepada {{tujuan}} untuk memperhatikan hal-hal sebagai berikut:\n\n1. [Isi edaran]\n2. [Isi edaran]\n3. [Isi edaran]\n\nDemikian edaran ini kami sampaikan untuk diindahkan dan dilaksanakan sebagaimana mestinya.\n\nWassalamualaikum Wr. Wb.',
+                                status: 'Aktif',
+                                createdAt: '2024-01-01',
+                                updatedAt: '2024-01-01',
+                                deskripsi: 'Template edaran untuk informasi resmi sekolah'
                             },
                             {
                                 id: 'pengantar',
                                 nama: 'Surat Pengantar',
                                 kategori: 'Pengantar',
                                 variables: ['{{nomorSurat}}', '{{tanggal}}', '{{perihal}}', '{{tujuan}}'],
-                                content: 'Yang terhormat,\n\nDengan hormat kami sampaikan bahwa kami akan mengantar {{perihal}} kepada {{tujuan}}.\n\nBersama ini kami lampirkan dokumen-dokumen yang diperlukan:\n\n1. [Dokumen 1]\n2. [Dokumen 2]\n3. [Dokumen 3]\n\nDemikian surat pengantar ini kami buat, atas perhatian dan kerjasamanya kami ucapkan terima kasih.'
+                                content: 'Yang terhormat,\n\nDengan hormat kami sampaikan bahwa kami akan mengantar {{perihal}} kepada {{tujuan}}.\n\nBersama ini kami lampirkan dokumen-dokumen yang diperlukan:\n\n1. [Dokumen 1]\n2. [Dokumen 2]\n3. [Dokumen 3]\n\nDemikian surat pengantar ini kami buat, atas perhatian dan kerjasamanya kami ucapkan terima kasih.',
+                                status: 'Aktif',
+                                createdAt: '2024-01-01',
+                                updatedAt: '2024-01-01',
+                                deskripsi: 'Template surat pengantar untuk berbagai keperluan'
                             },
                             {
                                 id: 'rekomendasi',
                                 nama: 'Surat Rekomendasi',
                                 kategori: 'Keterangan',
                                 variables: ['{{nomorSurat}}', '{{tanggal}}', '{{perihal}}', '{{tujuan}}'],
-                                content: 'Yang terhormat,\n\nBerdasarkan pengalaman dan penilaian kami, kami dengan ini merekomendasikan {{perihal}} kepada {{tujuan}}.\n\nPertimbangan kami merekomendasikan adalah:\n\n1. [Alasan 1]\n2. [Alasan 2]\n3. [Alasan 3]\n\nDemikian surat rekomendasi ini kami buat dengan sebenar-benarnya untuk dapat dipergunakan sebagaimana mestinya.'
+                                content: 'Yang terhormat,\n\nBerdasarkan pengalaman dan penilaian kami, kami dengan ini merekomendasikan {{perihal}} kepada {{tujuan}}.\n\nPertimbangan kami merekomendasikan adalah:\n\n1. [Alasan 1]\n2. [Alasan 2]\n3. [Alasan 3]\n\nDemikian surat rekomendasi ini kami buat dengan sebenar-benarnya untuk dapat dipergunakan sebagaimana mestinya.',
+                                status: 'Aktif',
+                                createdAt: '2024-01-01',
+                                updatedAt: '2024-01-01',
+                                deskripsi: 'Template surat rekomendasi untuk berbagai keperluan'
                             }
                         ];
                         console.log('Fallback templates loaded:', this.suratTemplates.length);
+                        this.updateTemplateStats();
                     }
                 },
                 
@@ -1119,20 +1500,184 @@
                     }
                 },
                 
-                // API call
-                async apiCall(action, data = {}) {
-                    const formData = new FormData();
-                    formData.append('action', action);
-                    Object.keys(data).forEach(key => {
-                        formData.append(key, data[key]);
-                    });
-
-                    const response = await fetch(this.apiBase, {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    return await response.json();
+                // Get filtered templates
+                get filteredTemplates() {
+                    let filtered = this.suratTemplates;
+                    
+                    // Apply search filter
+                    if (this.searchQuery) {
+                        const query = this.searchQuery.toLowerCase();
+                        filtered = filtered.filter(template => 
+                            template.nama.toLowerCase().includes(query) ||
+                            template.deskripsi.toLowerCase().includes(query)
+                        );
+                    }
+                    
+                    // Apply category filter
+                    if (this.filterKategori) {
+                        filtered = filtered.filter(template => template.kategori === this.filterKategori);
+                    }
+                    
+                    return filtered;
+                },
+                
+                // Update template statistics
+                updateTemplateStats() {
+                    this.templateStats = {
+                        total: this.suratTemplates.length,
+                        aktif: this.suratTemplates.filter(t => t.status === 'Aktif').length,
+                        draft: this.suratTemplates.filter(t => t.status === 'Draft').length,
+                        recent: this.suratTemplates.filter(t => {
+                            const createdDate = new Date(t.createdAt);
+                            const sevenDaysAgo = new Date();
+                            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+                            return createdDate >= sevenDaysAgo;
+                        }).length
+                    };
+                },
+                
+                // Refresh templates
+                async refreshTemplates() {
+                    this.loading = true;
+                    try {
+                        await this.loadTemplates();
+                        this.showNotification('Template berhasil di-refresh', 'success');
+                    } catch (error) {
+                        this.showNotification('Gagal refresh template', 'error');
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                
+                // Register template
+                async registerTemplate() {
+                    this.loading = true;
+                    try {
+                        const response = await this.apiCall('createTemplate', this.templateForm);
+                        
+                        if (response.status === 'success') {
+                            this.showNotification('Template berhasil dibuat', 'success');
+                            this.resetTemplateForm();
+                            this.currentPage = 'template-list';
+                            await this.loadTemplates();
+                        } else {
+                            throw new Error(response.message || 'Failed to create template');
+                        }
+                    } catch (error) {
+                        console.error('Error creating template:', error);
+                        this.showNotification('Gagal membuat template', 'error');
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                
+                // Edit template
+                editTemplate(template) {
+                    this.currentEditingTemplate = template;
+                    this.editTemplateForm = {
+                        id: template.id,
+                        nama: template.nama,
+                        kategori: template.kategori,
+                        variables: template.variables,
+                        content: template.content,
+                        deskripsi: template.deskripsi,
+                        status: template.status,
+                        file: null
+                    };
+                    this.currentPage = 'template-edit';
+                },
+                
+                // Update template
+                async updateTemplate() {
+                    this.loading = true;
+                    try {
+                        const response = await this.apiCall('updateTemplate', this.editTemplateForm);
+                        
+                        if (response.status === 'success') {
+                            this.showNotification('Template berhasil diupdate', 'success');
+                            this.currentEditingTemplate = null;
+                            this.currentPage = 'template-list';
+                            await this.loadTemplates();
+                        } else {
+                            throw new Error(response.message || 'Failed to update template');
+                        }
+                    } catch (error) {
+                        console.error('Error updating template:', error);
+                        this.showNotification('Gagal update template', 'error');
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                
+                // Delete template
+                async deleteTemplate(template) {
+                    if (!confirm(`Apakah Anda yakin ingin menghapus template "${template.nama}"?`)) {
+                        return;
+                    }
+                    
+                    this.loading = true;
+                    try {
+                        const response = await this.apiCall('deleteTemplate', { id: template.id });
+                        
+                        if (response.status === 'success') {
+                            this.showNotification('Template berhasil dihapus', 'success');
+                            await this.loadTemplates();
+                        } else {
+                            throw new Error(response.message || 'Failed to delete template');
+                        }
+                    } catch (error) {
+                        console.error('Error deleting template:', error);
+                        this.showNotification('Gagal hapus template', 'error');
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                
+                // Cancel edit template
+                cancelEditTemplate() {
+                    this.currentEditingTemplate = null;
+                    this.editTemplateForm = {
+                        id: '',
+                        nama: '',
+                        kategori: '',
+                        variables: '',
+                        content: '',
+                        deskripsi: '',
+                        status: 'Aktif',
+                        file: null
+                    };
+                    this.currentPage = 'template-list';
+                },
+                
+                // Reset template form
+                resetTemplateForm() {
+                    this.templateForm = {
+                        nama: '',
+                        kategori: '',
+                        variables: '',
+                        content: '',
+                        deskripsi: '',
+                        status: 'Aktif',
+                        file: null
+                    };
+                },
+                
+                // Handle template file upload
+                handleTemplateFileUpload(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        this.templateForm.file = file;
+                        this.showNotification(`File ${file.name} diupload`, 'success');
+                    }
+                },
+                
+                // Handle edit template file upload
+                handleEditTemplateFileUpload(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        this.editTemplateForm.file = file;
+                        this.showNotification(`File ${file.name} diupload`, 'success');
+                    }
                 },
                 
                 // Load template dari Google Docs
