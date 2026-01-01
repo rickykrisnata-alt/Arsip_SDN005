@@ -1,104 +1,252 @@
 <!DOCTYPE html>
-<html lang="id" x-data="{ sidebarOpen: false, currentPage: 'pengguna', userRole: 'admin' }">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manajemen Pengguna - Sistem Kearsipan Surat</title>
+    <title>Manajemen User - Sistem Kearsipan SDN 005</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="assets/js/app.js"></script>
     <style>
-        [x-cloak] { display: none !important; }
-        .sidebar-transition { transition: transform 0.3s ease-in-out; }
-        .fade-in { animation: fadeIn 0.3s ease-in; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .sidebar-desktop {
+            display: none;
         }
-        .hover-scale { transition: transform 0.2s; }
-        .hover-scale:hover { transform: scale(1.02); }
+        @media (min-width: 1024px) {
+            .sidebar-desktop {
+                display: block;
+            }
+        }
+        .sidebar-scrollable::-webkit-scrollbar {
+            width: 6px;
+        }
+        .sidebar-scrollable::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        .sidebar-scrollable::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 3px;
+        }
+        .sidebar-scrollable::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
     </style>
 </head>
-<body class="bg-gray-50 font-sans">
-    <!-- Header (same as main index.html) -->
-    <header class="bg-white shadow-sm border-b border-gray-200 fixed top-0 left-0 right-0 z-40">
-        <div class="px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 lg:hidden">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                    <div class="flex-shrink-0 flex items-center ml-4 lg:ml-0">
-                        <i class="fas fa-school text-blue-600 text-2xl mr-3"></i>
-                        <div>
-                            <h1 class="text-xl font-bold text-gray-900">Sistem Kearsipan Surat</h1>
-                            <p class="text-xs text-gray-500">SDN 005</p>
-                        </div>
-                    </div>
+<body class="bg-gray-50" x-data="sistemKearsipan()">
+    <!-- Mobile Sidebar -->
+    <aside x-show="sidebarOpen" x-cloak 
+           class="fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 shadow-xl border-r border-gray-700 lg:hidden"
+           @click.away="sidebarOpen = false">
+        <div class="flex items-center justify-between p-4 border-b border-gray-700">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-teal-600 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-archive text-white"></i>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <a href="index.html" class="px-4 py-2 text-gray-600 hover:text-gray-900">
-                        <i class="fas fa-arrow-left mr-2"></i>Kembali
-                    </a>
+                <div>
+                    <h1 class="text-lg font-bold text-white">SDN 005</h1>
+                    <p class="text-xs text-gray-400">Sistem Kearsipan</p>
+                </div>
+            </div>
+            <button @click="sidebarOpen = false" class="text-gray-400 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto max-h-[calc(100vh-8rem)] sidebar-scrollable">
+            <!-- Navigation items akan diisi dengan JavaScript -->
+        </nav>
+    </aside>
+    
+    <!-- Desktop Sidebar -->
+    <aside class="sidebar-desktop fixed inset-y-0 left-0 z-30 w-64 bg-gray-900 border-r border-gray-700">
+        <div class="flex items-center justify-between p-4 border-b border-gray-700">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-teal-600 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-archive text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-white">SDN 005</h1>
+                    <p class="text-xs text-gray-400">Sistem Kearsipan</p>
                 </div>
             </div>
         </div>
-    </header>
-
+        
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto max-h-[calc(100vh-8rem)] sidebar-scrollable">
+            <!-- Navigation items akan diisi dengan JavaScript -->
+        </nav>
+    </aside>
+    
     <!-- Main Content -->
-    <main class="pt-16">
-        <div class="px-4 sm:px-6 lg:px-8 py-8">
-            <!-- Page Header -->
-            <div class="mb-8 flex justify-between items-center">
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-900">Manajemen Pengguna</h2>
-                    <p class="text-gray-600">Kelola akun pengguna sistem</p>
-                </div>
-                <button @click="showAddUserModal = true" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                    <i class="fas fa-plus mr-2"></i>Tambah Pengguna
-                </button>
-            </div>
-
-            <!-- Users Table -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div class="p-4 border-b border-gray-200">
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
-                        <div class="flex space-x-2">
-                            <input type="text" x-model="searchQuery" @input="filterUsers" placeholder="Cari pengguna..." class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            <select x-model="roleFilter" @change="filterUsers" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                <option value="">Semua Role</option>
-                                <option value="admin">Admin</option>
-                                <option value="pimpinan">Pimpinan</option>
-                                <option value="user">User</option>
-                            </select>
-                        </div>
-                        <button class="px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                            <i class="fas fa-download mr-2"></i>Export
+    <main class="lg:ml-64 pt-16">
+        <!-- Header -->
+        <header class="fixed top-0 left-0 right-0 z-40 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 border-b border-gray-700 shadow-xl backdrop-blur-sm">
+            <div class="px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white transition-all duration-300 lg:hidden">
+                            <i class="fas fa-bars"></i>
                         </button>
+                        <h2 class="ml-4 text-xl font-semibold text-white">Manajemen User</h2>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <button @click="loadUsers()" class="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white transition-all duration-300">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button @click="showAddUserModal = true" class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors">
+                            <i class="fas fa-plus mr-2"></i> Tambah User
+                        </button>
+                        <button class="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white transition-all duration-300">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <div class="relative" x-data="{ userMenuOpen: false }">
+                            <button @click="userMenuOpen = !userMenuOpen" class="flex items-center space-x-2 p-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white transition-all duration-300">
+                                <div class="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-sm"></i>
+                                </div>
+                                <span class="hidden md:block text-sm" x-text="userRole === 'admin' ? 'Administrator' : userRole === 'pimpinan' ? 'Pimpinan' : 'User'"></span>
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            
+                            <div x-show="userMenuOpen" @click.away="userMenuOpen = false" x-cloak
+                                 class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-xl border border-gray-700">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                                    <i class="fas fa-user-circle mr-2"></i> Profil
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                                    <i class="fas fa-cog mr-2"></i> Pengaturan
+                                </a>
+                                <hr class="my-1 border-gray-700">
+                                <a href="login.html" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">
+                                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </header>
+        
+        <!-- Page Content -->
+        <div class="px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Breadcrumb -->
+            <nav class="mb-8">
+                <ol class="flex items-center space-x-2 text-sm">
+                    <li><a href="index.html" class="text-gray-500 hover:text-gray-700">Dashboard</a></li>
+                    <li><span class="text-gray-400">/</span></li>
+                    <li><span class="text-gray-900 font-medium">Manajemen User</span></li>
+                </ol>
+            </nav>
+            
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow-sm border-gray-200 p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-blue-100 rounded-lg">
+                            <i class="fas fa-users text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500">Total User</p>
+                            <p class="text-2xl font-bold text-gray-900" x-text="users.length"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm border-gray-200 p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-purple-100 rounded-lg">
+                            <i class="fas fa-user-shield text-purple-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500">Admin</p>
+                            <p class="text-2xl font-bold text-gray-900" x-text="users.filter(u => u.role === 'admin').length"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm border-gray-200 p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-green-100 rounded-lg">
+                            <i class="fas fa-user-tie text-green-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500">Pimpinan</p>
+                            <p class="text-2xl font-bold text-gray-900" x-text="users.filter(u => u.role === 'pimpinan').length"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm border-gray-200 p-6">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-teal-100 rounded-lg">
+                            <i class="fas fa-user text-teal-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500">User</p>
+                            <p class="text-2xl font-bold text-gray-900" x-text="users.filter(u => u.role === 'user').length"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Search and Filter -->
+            <div class="bg-white rounded-lg shadow-sm border-gray-200 p-6 mb-8">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+                    <div class="flex-1 max-w-md">
+                        <div class="relative">
+                            <input type="text" x-model="searchTerm" @input="filterUsers()"
+                                   class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                                   placeholder="Cari user...">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div class="flex space-x-4">
+                        <select x-model="filterRole" @change="filterUsers()"
+                                class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                            <option value="">Semua Role</option>
+                            <option value="admin">Admin</option>
+                            <option value="pimpinan">Pimpinan</option>
+                            <option value="user">User</option>
+                        </select>
+                        <select x-model="filterStatus" @change="filterUsers()"
+                                class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
+                            <option value="">Semua Status</option>
+                            <option value="Aktif">Aktif</option>
+                            <option value="Tidak Aktif">Tidak Aktif</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Users Table -->
+            <div class="bg-white rounded-lg shadow-sm border-gray-200 overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jabatan</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    User
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Email
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Jabatan
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Role
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Aksi
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             <template x-for="user in filteredUsers" :key="user.no">
                                 <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="user.no"></td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0 h-10 w-10">
-                                                <div class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center">
+                                                <div class="h-10 w-10 rounded-full bg-teal-600 flex items-center justify-center">
                                                     <span class="text-white font-medium" x-text="user.nama.charAt(0)"></span>
                                                 </div>
                                             </div>
@@ -111,33 +259,52 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="user.email"></td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="user.jabatan"></td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span :class="{
-                                            'px-2 py-1 text-xs rounded-full': true,
-                                            'bg-purple-100 text-purple-800': user.role === 'admin',
-                                            'bg-green-100 text-green-800': user.role === 'pimpinan',
-                                            'bg-blue-100 text-blue-800': user.role === 'user'
-                                        }" x-text="user.role.toUpperCase()"></span>
+                                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+                                              :class="user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 
+                                                      user.role === 'pimpinan' ? 'bg-green-100 text-green-800' : 
+                                                      'bg-blue-100 text-blue-800'"
+                                              x-text="user.role.toUpperCase()"></span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <span :class="{
-                                            'px-2 py-1 text-xs rounded-full': true,
-                                            'bg-green-100 text-green-800': user.status === 'Aktif',
-                                            'bg-red-100 text-red-800': user.status === 'Tidak Aktif'
-                                        }" x-text="user.status"></span>
+                                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+                                              :class="user.status === 'Aktif' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+                                              x-text="user.status"></span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <button @click="editUser(user)" class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
-                                        <button @click="deleteUser(user)" class="text-red-600 hover:text-red-900">Hapus</button>
+                                        <div class="flex space-x-2">
+                                            <button @click="editUser(user)" 
+                                                    class="text-teal-600 hover:text-teal-900">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button @click="resetPassword(user)" 
+                                                    class="text-yellow-600 hover:text-yellow-900">
+                                                <i class="fas fa-key"></i>
+                                            </button>
+                                            <button @click="deleteUser(user)" 
+                                                    class="text-red-600 hover:text-red-900">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             </template>
                         </tbody>
                     </table>
                 </div>
+                
+                <!-- Empty State -->
+                <div x-show="filteredUsers.length === 0" class="text-center py-12">
+                    <i class="fas fa-users text-6xl text-gray-400 mb-4"></i>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada user</h3>
+                    <p class="text-gray-500 mb-4">Mulai dengan menambahkan user pertama</p>
+                    <button @click="showAddUserModal = true" class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors">
+                        <i class="fas fa-plus mr-2"></i> Tambah User
+                    </button>
+                </div>
             </div>
         </div>
     </main>
-
+    
     <!-- Add/Edit User Modal -->
     <div x-show="showAddUserModal" x-cloak 
          class="fixed inset-0 z-50 overflow-y-auto"
@@ -151,28 +318,33 @@
                 <form @submit.prevent="saveUser">
                     <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                         <div class="mb-4">
-                            <h3 class="text-lg font-medium text-gray-900" x-text="editingUser ? 'Edit Pengguna' : 'Tambah Pengguna Baru'"></h3>
+                            <h3 class="text-lg font-medium text-gray-900" x-text="editingUser ? 'Edit User' : 'Tambah User Baru'"></h3>
                         </div>
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
-                                <input type="text" x-model="userForm.nama" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap <span class="text-red-500">*</span></label>
+                                <input type="text" x-model="userForm.nama" required 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                                <input type="email" x-model="userForm.email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email <span class="text-red-500">*</span></label>
+                                <input type="email" x-model="userForm.email" required 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">NIP/NIPPPK</label>
-                                <input type="text" x-model="userForm.nip" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">NIP/NIPPPK <span class="text-red-500">*</span></label>
+                                <input type="text" x-model="userForm.nip" required 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Jabatan</label>
-                                <input type="text" x-model="userForm.jabatan" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Jabatan <span class="text-red-500">*</span></label>
+                                <input type="text" x-model="userForm.jabatan" required 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
-                                <select x-model="userForm.role" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Role <span class="text-red-500">*</span></label>
+                                <select x-model="userForm.role" required 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
                                     <option value="">Pilih Role</option>
                                     <option value="admin">Admin</option>
                                     <option value="pimpinan">Pimpinan</option>
@@ -181,15 +353,18 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Pangkat/Golongan</label>
-                                <input type="text" x-model="userForm.pangkat" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <input type="text" x-model="userForm.pangkat" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
                             </div>
                             <div x-show="!editingUser">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                                <input type="password" x-model="userForm.password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Password <span class="text-red-500">*</span></label>
+                                <input type="password" x-model="userForm.password" required 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                                <select x-model="userForm.status" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Status <span class="text-red-500">*</span></label>
+                                <select x-model="userForm.status" required 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
                                     <option value="Aktif">Aktif</option>
                                     <option value="Tidak Aktif">Tidak Aktif</option>
                                 </select>
@@ -197,10 +372,13 @@
                         </div>
                     </div>
                     <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                        <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
-                            <span x-text="editingUser ? 'Update' : 'Simpan'"></span>
+                        <button type="submit" :disabled="loading"
+                                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-teal-600 text-base font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50">
+                            <span x-show="!loading" x-text="editingUser ? 'Update' : 'Simpan'"></span>
+                            <span x-show="loading">Menyimpan...</span>
                         </button>
-                        <button type="button" @click="closeUserModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        <button type="button" @click="closeUserModal" 
+                                class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                             Batal
                         </button>
                     </div>
@@ -208,20 +386,48 @@
             </div>
         </div>
     </div>
-
+    
+    <!-- Notification -->
+    <div x-show="notification.show" x-cloak
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 transform translate-y-2"
+         x-transition:enter-end="opacity-100 transform translate-y-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 transform translate-y-0"
+         x-transition:leave-end="opacity-0 transform translate-y-2"
+         class="fixed top-20 right-4 z-50 max-w-sm">
+        <div class="p-4 rounded-lg shadow-lg border"
+             :class="notification.type === 'success' ? 'bg-green-50 border-green-200 text-green-800' : 
+                     notification.type === 'error' ? 'bg-red-50 border-red-200 text-red-800' : 
+                     'bg-blue-50 border-blue-200 text-blue-800'">
+            <div class="flex items-center">
+                <i class="fas mr-3"
+                   :class="notification.type === 'success' ? 'fa-check-circle text-green-500' : 
+                           notification.type === 'error' ? 'fa-exclamation-circle text-red-500' : 
+                           'fa-info-circle text-blue-500'"></i>
+                <span x-text="notification.message"></span>
+            </div>
+        </div>
+    </div>
+    
+    <script src="assets/js/app.js"></script>
     <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('userManagement', () => ({
-                users: [
-                    { no: 1, nama: 'Administrator Sistem', email: 'admin@sdn005.sch.id', nip: '198001012005011001', jabatan: 'Kepala Sekolah', role: 'admin', pangkat: 'IV/a', status: 'Aktif' },
-                    { no: 2, nama: 'Dr. Budi Santoso, M.Pd', email: 'kepsek@sdn005.sch.id', nip: '197503152000031001', jabatan: 'Kepala Sekolah', role: 'pimpinan', pangkat: 'IV/a', status: 'Aktif' },
-                    { no: 3, nama: 'Siti Aminah, S.Pd', email: 'wakasek@sdn005.sch.id', nip: '198005122005012001', jabatan: 'Wakil Kepala Sekolah', role: 'pimpinan', pangkat: 'IV/a', status: 'Aktif' },
-                    { no: 4, nama: 'Ahmad Wijaya', email: 'staff@sdn005.sch.id', nip: '198508152010011001', jabatan: 'Staff Tata Usaha', role: 'user', pangkat: 'III/c', status: 'Aktif' },
-                    { no: 5, nama: 'Dewi Lestari', email: 'guru1@sdn005.sch.id', nip: '198702102009022001', jabatan: 'Guru Kelas', role: 'user', pangkat: 'III/b', status: 'Aktif' }
-                ],
+        function sistemKearsipan() {
+            return {
+                sidebarOpen: false,
+                currentPage: 'pengguna',
+                userRole: 'admin',
+                loading: false,
+                notification: {
+                    show: false,
+                    type: 'success',
+                    message: ''
+                },
+                users: [],
                 filteredUsers: [],
-                searchQuery: '',
-                roleFilter: '',
+                searchTerm: '',
+                filterRole: '',
+                filterStatus: '',
                 showAddUserModal: false,
                 editingUser: null,
                 userForm: {
@@ -234,59 +440,108 @@
                     password: '',
                     status: 'Aktif'
                 },
-
-                init() {
-                    this.filteredUsers = this.users;
-                },
-
-                filterUsers() {
-                    this.filteredUsers = this.users.filter(user => {
-                        const matchesSearch = !this.searchQuery || 
-                            user.nama.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                            user.email.toLowerCase().includes(this.searchQuery.toLowerCase());
-                        
-                        const matchesRole = !this.roleFilter || user.role === this.roleFilter;
-                        
-                        return matchesSearch && matchesRole;
-                    });
-                },
-
-                editUser(user) {
-                    this.editingUser = user;
-                    this.userForm = { ...user, password: '' };
-                    this.showAddUserModal = true;
-                },
-
-                deleteUser(user) {
-                    if (confirm(`Apakah Anda yakin ingin menghapus pengguna "${user.nama}"?`)) {
-                        this.users = this.users.filter(u => u.no !== user.no);
-                        this.filterUsers();
-                        alert('Pengguna berhasil dihapus');
-                    }
-                },
-
-                saveUser() {
-                    if (this.editingUser) {
-                        // Update existing user
-                        const index = this.users.findIndex(u => u.no === this.editingUser.no);
-                        if (index !== -1) {
-                            this.users[index] = { ...this.userForm, no: this.editingUser.no };
-                        }
-                        alert('Pengguna berhasil diupdate');
-                    } else {
-                        // Add new user
-                        const newUser = {
-                            ...this.userForm,
-                            no: Math.max(...this.users.map(u => u.no)) + 1
-                        };
-                        this.users.push(newUser);
-                        alert('Pengguna berhasil ditambahkan');
-                    }
-                    
-                    this.closeUserModal();
+                
+                async init() {
+                    await this.loadUsers();
                     this.filterUsers();
                 },
-
+                
+                async loadUsers() {
+                    this.loading = true;
+                    try {
+                        const response = await this.apiCall('getUsers');
+                        this.users = response.data || [];
+                        this.filterUsers();
+                    } catch (error) {
+                        this.showNotification('Gagal memuat data user', 'error');
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                
+                filterUsers() {
+                    this.filteredUsers = this.users.filter(user => {
+                        const matchesSearch = !this.searchTerm || 
+                            user.nama.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                            user.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                            user.jabatan.toLowerCase().includes(this.searchTerm.toLowerCase());
+                        
+                        const matchesRole = !this.filterRole || user.role === this.filterRole;
+                        const matchesStatus = !this.filterStatus || user.status === this.filterStatus;
+                        
+                        return matchesSearch && matchesRole && matchesStatus;
+                    });
+                },
+                
+                editUser(user) {
+                    this.editingUser = user;
+                    this.userForm = { ...user };
+                    this.showAddUserModal = true;
+                },
+                
+                async saveUser() {
+                    if (!this.userForm.nama || !this.userForm.email || !this.userForm.nip || !this.userForm.jabatan || !this.userForm.role) {
+                        this.showNotification('Lengkapi semua field yang required', 'error');
+                        return;
+                    }
+                    
+                    this.loading = true;
+                    
+                    try {
+                        const action = this.editingUser ? 'updateUser' : 'createUser';
+                        const response = await this.apiCall(action, this.userForm);
+                        
+                        if (response.success) {
+                            this.showNotification(this.editingUser ? 'User berhasil diupdate' : 'User berhasil ditambahkan', 'success');
+                            this.closeUserModal();
+                            await this.loadUsers();
+                        } else {
+                            this.showNotification(response.message || 'Gagal menyimpan user', 'error');
+                        }
+                    } catch (error) {
+                        this.showNotification('Terjadi kesalahan saat menyimpan user', 'error');
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                
+                async resetPassword(user) {
+                    if (!confirm(`Reset password untuk "${user.nama}"?`)) {
+                        return;
+                    }
+                    
+                    try {
+                        const response = await this.apiCall('resetPassword', { id: user.no });
+                        
+                        if (response.success) {
+                            this.showNotification(`Password berhasil direset. Password baru: ${response.newPassword}`, 'success');
+                        } else {
+                            this.showNotification(response.message || 'Gagal reset password', 'error');
+                        }
+                    } catch (error) {
+                        this.showNotification('Terjadi kesalahan saat reset password', 'error');
+                    }
+                },
+                
+                async deleteUser(user) {
+                    if (!confirm(`Apakah Anda yakin ingin menghapus user "${user.nama}"?`)) {
+                        return;
+                    }
+                    
+                    try {
+                        const response = await this.apiCall('deleteUser', { id: user.no });
+                        
+                        if (response.success) {
+                            this.showNotification('User berhasil dihapus', 'success');
+                            await this.loadUsers();
+                        } else {
+                            this.showNotification(response.message || 'Gagal menghapus user', 'error');
+                        }
+                    } catch (error) {
+                        this.showNotification('Terjadi kesalahan saat menghapus user', 'error');
+                    }
+                },
+                
                 closeUserModal() {
                     this.showAddUserModal = false;
                     this.editingUser = null;
@@ -300,9 +555,41 @@
                         password: '',
                         status: 'Aktif'
                     };
+                },
+                
+                showNotification(message, type = 'success') {
+                    this.notification = {
+                        show: true,
+                        type: type,
+                        message: message
+                    };
+                    
+                    setTimeout(() => {
+                        this.notification.show = false;
+                    }, 3000);
+                },
+                
+                async apiCall(action, data = {}) {
+                    const API_BASE = 'https://script.google.com/macros/s/AKfycbxtLfyDfzhDiQvU2saKpU0zIRPQKCQyj46Fs4tLK7r8nt3LoHNSbMFd0vRkYXavSJfc/exec';
+                    
+                    try {
+                        const response = await fetch(`${API_BASE}?action=${action}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(data)
+                        });
+                        
+                        const result = await response.json();
+                        return result;
+                    } catch (error) {
+                        console.error('API Error:', error);
+                        throw error;
+                    }
                 }
-            }));
-        });
+            }
+        }
     </script>
 </body>
 </html>
