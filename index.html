@@ -675,7 +675,7 @@
                                     <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" x-model="suratForm.template" @change="loadTemplate()">
                                         <option value="">-- Pilih Template --</option>
                                         <template x-for="template in suratTemplates" :key="template.id">
-                                            <option :value="template.id" x-text="template.name"></option>
+                                            <option :value="template.id" x-text="template.nama"></option>
                                         </template>
                                     </select>
                                 </div>
@@ -900,20 +900,9 @@
                 },
                 
                 // Data dari database
-                suratTemplates: [
-                    { id: 'undangan', name: 'Undangan Rapat', content: 'Assalamu\'alaikum wr. wb.\n\nDengan hormat,\n\nBersama ini kami mengundang Bapak/Ibu untuk menghadiri {{nama_kegiatan}} yang akan diselenggarakan pada:\n\nHari/Tanggal: {{tanggal}}\nWaktu: {{waktu}}\nTempat: {{tempat}}\n\nDemikian undangan ini kami sampaikan, atas perhatian dan kehadiran Bapak/Ibu kami ucapkan terima kasih.\n\nWassalamu\'alaikum wr. wb.' },
-                    { id: 'pemberitahuan', name: 'Pemberitahuan', content: 'Diberitahukan kepada seluruh warga sekolah bahwa {{perihal}} akan dilaksanakan pada {{tanggal}} di {{tempat}}.\n\nDemikian pemberitahuan ini dibuat untuk diketahui dan dilaksanakan.' },
-                    { id: 'edaran', name: 'Edaran', content: 'Nomor: {{nomor_surat}}\nLampiran: -\n\nHal: {{perihal}}\n\nKepada Yth:\n{{tujuan}}\n\nAssalamu\'alaikum wr. wb.\n\nSehubungan dengan {{perihal}}, dengan ini kami sampaikan bahwa:\n\n{{isi}}\n\nDemikian edaran ini kami sampaikan untuk menjadi perhatian.\n\nWassalamu\'alaikum wr. wb.' },
-                    { id: 'pengantar', name: 'Surat Pengantar', content: 'Nomor: {{nomor_surat}}\n\nHal: Surat Pengantar {{perihal}}\n\nKepada Yth:\n{{tujuan}}\n\nDengan hormat,\n\nBersama ini kami kirimkan {{perihal}} untuk diproses lebih lanjut.\n\nDemikian surat pengantar ini kami buat, atas kerjasamanya kami ucapkan terima kasih.' },
-                    { id: 'rekomendasi', name: 'Surat Rekomendasi', content: 'Nomor: {{nomor_surat}}\n\nHal: Surat Rekomendasi {{perihal}}\n\nKepada Yth:\n{{tujuan}}\n\nDengan hormat,\n\nBerdasarkan permohonan yang diajukan, dengan ini kami merekomendasikan:\n\n{{isi}}\n\nDemikian surat rekomendasi ini kami buat untuk dapat dipergunakan sebagaimana mestinya.' }
-                ],
+                suratTemplates: [],
                 
-                kodeArsipOptions: [
-                    { kode: '400.1.1', nama: 'Kearsipan Umum' },
-                    { kode: '400.2.1', nama: 'Kearsipan Kepegawaian' },
-                    { kode: '400.3.1', nama: 'Kearsipan Keuangan' },
-                    { kode: '400.4.1', nama: 'Kearsipan Sarana Prasarana' }
-                ],
+                kodeArsipOptions: [],
                 
                 notification: {
                     show: false,
@@ -949,6 +938,14 @@
                         }
                     } catch (error) {
                         console.log('Using fallback templates');
+                        // Fallback templates jika error
+                        this.suratTemplates = [
+                            { id: 'undangan', nama: 'Undangan Rapat', kategori: 'Undangan' },
+                            { id: 'pemberitahuan', nama: 'Pemberitahuan', kategori: 'Pemberitahuan' },
+                            { id: 'edaran', nama: 'Edaran', kategori: 'Edaran' },
+                            { id: 'pengantar', nama: 'Surat Pengantar', kategori: 'Pengantar' },
+                            { id: 'rekomendasi', nama: 'Surat Rekomendasi', kategori: 'Keterangan' }
+                        ];
                     }
                 },
                 
@@ -960,6 +957,13 @@
                         }
                     } catch (error) {
                         console.log('Using fallback kode arsip');
+                        // Fallback kode arsip jika error
+                        this.kodeArsipOptions = [
+                            { kode: '400.1.1', nama: 'Kearsipan Umum' },
+                            { kode: '400.2.1', nama: 'Kearsipan Kepegawaian' },
+                            { kode: '400.3.1', nama: 'Kearsipan Keuangan' },
+                            { kode: '400.4.1', nama: 'Kearsipan Sarana Prasarana' }
+                        ];
                     }
                 },
                 
@@ -979,12 +983,38 @@
                     return await response.json();
                 },
                 
-                // Load template
-                loadTemplate() {
-                    const template = this.suratTemplates.find(t => t.id === this.suratForm.template);
-                    if (template) {
-                        this.suratForm.perihal = template.name;
-                        this.suratForm.isi = template.content;
+                // Load template dari Google Docs
+                async loadTemplate() {
+                    if (!this.suratForm.template) {
+                        this.resetForm();
+                        return;
+                    }
+
+                    try {
+                        this.loading = true;
+                        const response = await this.apiCall('getTemplateContent', {
+                            templateId: this.suratForm.template
+                        });
+
+                        if (response.status === 'success') {
+                            // Load template content dari Google Doc
+                            this.suratForm.isi = response.data.content;
+                            
+                            // Set perihal dari nama template
+                            const selectedTemplate = this.suratTemplates.find(t => t.id === this.suratForm.template);
+                            if (selectedTemplate) {
+                                this.suratForm.perihal = selectedTemplate.nama;
+                            }
+
+                            // Reset nomor surat saat ganti template
+                            this.suratForm.noSurat = '';
+                        } else {
+                            this.showNotification('Gagal memuat template: ' + response.message, 'error');
+                        }
+                    } catch (error) {
+                        this.showNotification('Terjadi kesalahan saat memuat template', 'error');
+                    } finally {
+                        this.loading = false;
                     }
                 },
                 
